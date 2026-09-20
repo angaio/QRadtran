@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<title>QRadtran – Installations- und Benutzerhandbuch</title>
+<style>
+ body { font-family: "Segoe UI", Arial, sans-serif; color:#111620; background:#f6f7f9; margin:0; }
+ main { max-width: 960px; margin: 0 auto; padding: 32px 40px 60px; background:#fff; }
+ h1 { border-bottom: 3px solid #0e58a8; padding-bottom: 8px; }
+ h2 { color:#0e58a8; margin-top: 2.2em; border-bottom: 1px solid #d8dce2; padding-bottom: 4px; }
+ h3 { color:#46505a; }
+ table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+ th, td { border: 1px solid #d8dce2; padding: 6px 10px; text-align: left; vertical-align: top; }
+ th { background: #eef1f5; }
+ code { background:#eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+ pre { background:#111620; color:#f5f7fa; padding: 12px 16px; border-radius: 6px; overflow-x:auto; font-size:13px; }
+ pre code { background: none; color: inherit; padding: 0; }
+ a { color:#0e58a8; }
+ strong { color:#c6282c; }
+</style></head><body><main>
+<h1 id="qradtran-installations-und-benutzerhandbuch">QRadtran – Installations- und Benutzerhandbuch</h1>
+<p><strong>Version</strong> 0.3.0　　<strong>Datum</strong> 2026-09-19　　<strong>Herausgeber</strong> Wuhan WaveFront Co., Ltd.</p>
+<p>Dieses Handbuch gibt es auch in 简体中文, English, Русский, 日本語, 한국어, Français und Español; nach der Installation liegen alle Fassungen im Ordner <code>doc\</code> des Installationsverzeichnisses.</p>
+<p>QRadtran ist eine Software zur Berechnung der atmosphärischen Transmission und Strahldichte für Ingenieure im Bereich Infrarot- und elektrooptische Systeme. Unter Windows berechnet sie über eine grafische Oberfläche die spektrale Transmission auf schrägen und horizontalen Pfaden, Pfad- und Himmelsstrahldichte sowie die scheinbare Strahldichte eines Ziels. Sie unterstützt den Vergleich mehrerer Kurven, Parameter-Sweeps zur Erzeugung von Nachschlagetabellen (CSV / HDF5), ein Kommandozeilenwerkzeug und eine Python-Schnittstelle. Der Rechenkern ist das quelloffene libRadtran, das mit der Software installiert wird; eine gesonderte Konfiguration ist nicht nötig.</p>
+<hr />
+<h2 id="inhalt">Inhalt</h2>
+<ol>
+<li><a href="#1-systemanforderungen">Systemanforderungen</a></li>
+<li><a href="#2-installation">Installation</a></li>
+<li><a href="#3-erster-start">Erster Start</a></li>
+<li><a href="#4-überblick-über-die-oberfläche">Überblick über die Oberfläche</a></li>
+<li><a href="#5-parameterfeld-im-detail">Parameterfeld im Detail</a></li>
+<li><a href="#6-typische-arbeitsabläufe">Typische Arbeitsabläufe</a></li>
+<li><a href="#7-parameter-sweeps-und-nachschlagetabellen">Parameter-Sweeps und Nachschlagetabellen</a></li>
+<li><a href="#8-kommandozeilenwerkzeug">Kommandozeilenwerkzeug</a></li>
+<li><a href="#9-python-schnittstelle">Python-Schnittstelle</a></li>
+<li><a href="#10-einstellungen">Einstellungen</a></li>
+<li><a href="#11-rechenverfahren-und-genauigkeit">Rechenverfahren und Genauigkeit</a></li>
+<li><a href="#12-häufige-fragen">Häufige Fragen</a></li>
+<li><a href="#13-deinstallation">Deinstallation</a></li>
+<li><a href="#14-dateien-und-ordner">Dateien und Ordner</a></li>
+</ol>
+<hr />
+<h2 id="1-systemanforderungen">1. Systemanforderungen</h2>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Anforderung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Betriebssystem</td>
+<td>Windows 10 / 11, 64 Bit</td>
+</tr>
+<tr>
+<td>Prozessor</td>
+<td>4 Kerne oder mehr. Der Kern läuft in mehreren Prozessen parallel; mehr Kerne beschleunigen Batch-Berechnungen</td>
+</tr>
+<tr>
+<td>Arbeitsspeicher</td>
+<td>8 GB oder mehr</td>
+</tr>
+<tr>
+<td>Festplatte</td>
+<td>Etwa 1,2 GB nach der Installation (einschließlich der Spektraltabellen aller drei Auflösungen). SSD empfohlen, da Berechnungen in feiner Auflösung viele Daten lesen</td>
+</tr>
+<tr>
+<td>Bildschirm</td>
+<td>1600 × 900 oder größer</td>
+</tr>
+<tr>
+<td>Sonstiges</td>
+<td>Kein Python, MSYS2 oder WSL erforderlich; die VC++-Laufzeit ist enthalten</td>
+</tr>
+</tbody>
+</table>
+<p>Die Python-Schnittstelle ist optional und benötigt ein systemweites Python 3.10 64 Bit mit numpy.</p>
+<hr />
+<h2 id="2-installation">2. Installation</h2>
+<ol>
+<li>Doppelklicken Sie auf <code>QRadtran-0.3.0-Setup-x64.exe</code>.</li>
+<li>Wählen Sie die Sprache des Installationsprogramms (简体中文, English, Русский, 日本語, 한국어, Français, Deutsch, Español). Die gewählte Sprache wird als Oberflächensprache der Software übernommen; sie lässt sich später unter Werkzeuge → Einstellungen ändern.</li>
+<li>Lesen Sie die Hinweise zu Lizenzen Dritter und klicken Sie auf Weiter.</li>
+<li>Wählen Sie den Installationsordner, standardmäßig <code>C:\Program Files\QRadtran</code>. Der Pfad darf Umlaute enthalten; ein Netzlaufwerk wird nicht empfohlen.</li>
+<li>Zusätzliche Aufgaben:</li>
+<li><strong>Desktop-Verknüpfung erstellen</strong>: standardmäßig aktiviert.</li>
+<li><strong>Installationsordner zum PATH hinzufügen</strong>: standardmäßig deaktiviert. Wenn aktiviert, kann <code>qradtran-cli</code> in jeder Eingabeaufforderung aufgerufen werden.</li>
+<li>Klicken Sie auf Installieren und warten Sie, bis die Dateien kopiert sind (etwa 1 bis 3 Minuten).</li>
+<li>Auf der letzten Seite können Sie die Software starten oder dieses Handbuch öffnen.</li>
+</ol>
+<p>Das Installationsprogramm benötigt Administratorrechte. Um nur für den aktuellen Benutzer zu installieren, wählen Sie in der Rechteabfrage „Nur für mich installieren“; der Standardordner wird dann <code>%LOCALAPPDATA%\Programs\QRadtran</code>.</p>
+<h3 id="portable-nutzung">Portable Nutzung</h3>
+<p>Das Installationsprogramm ist optional: Kopieren Sie den gesamten Auslieferungsordner <code>QRadtran\</code> an einen beliebigen Ort und starten Sie dort <code>QRadtran.exe</code>. Alle Abhängigkeiten liegen im Ordner; das Löschen des Ordners deinstalliert die Software.</p>
+<hr />
+<h2 id="3-erster-start">3. Erster Start</h2>
+<p>Sehen Sie nach dem Start auf die Statusleiste unten rechts im Fenster:</p>
+<pre><code>Kern libradtran 2.0.6 | 7 Prozesse
+</code></pre>
+<p>Diese Zeile bedeutet, dass der Rechenkern bereit ist; „Prozesse“ ist die Zahl gleichzeitig laufender Kernprozesse. Steht dort „Kern nicht verfügbar“, öffnen Sie Werkzeuge → Einstellungen und prüfen Sie den Kernpfad, siehe Abschnitt 10.</p>
+<p><strong>Sprache der Oberfläche</strong>: Standardmäßig folgt die Software der Windows-Anzeigesprache und unterstützt vereinfachtes Chinesisch, Englisch, Russisch, Japanisch, Koreanisch, Französisch, Deutsch und Spanisch. Wählen Sie unter Werkzeuge → Einstellungen → Sprache der Oberfläche eine Sprache und starten Sie neu; die Sprache kann auch über die Kommandozeile erzwungen werden, z. B. <code>QRadtran.exe --lang de</code>.</p>
+<p>Beginnen Sie beim ersten Lauf mit einem voreingestellten Szenario:</p>
+<ol>
+<li>Menü Datei → Voreingestelltes Szenario laden…, wählen Sie <code>mls_ground_to_air_3_5um.json</code> (Atmosphäre mittlere Breiten Sommer, Blick vom Boden auf ein Ziel in 10 km Höhe, 3–5 µm).</li>
+<li>Klicken Sie in der Symbolleiste auf Ausführen oder drücken Sie F5.</li>
+<li>Im Feld Aufträge und Protokoll unten erscheint ein Auftrag; ist der Fortschrittsbalken voll, erscheinen die Kurven in der Mitte: Blau ist die Transmission (linke Achse), warme Farben sind die radiometrischen Größen (rechte Achse). Der ganze Lauf dauert etwa 7 Sekunden.</li>
+</ol>
+<hr />
+<h2 id="4-uberblick-uber-die-oberflache">4. Überblick über die Oberfläche</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ Datei  Berechnen  Ansicht  Werkzeuge  Hilfe                         │
+│ [Neu][Öffnen][Speichern] │ [▶Ausführen][■Stopp][Sweep] │ [Bild][Zoom] │ X-Achse  Dichte │
+├──────────────┬───────────────────────────────────────┬──────────────┤
+│  Parameter   │  Spektren / Ergebnistabelle           │  Kurven      │
+│  ▸ Atmosphäre│                                       │  ☑ Transmiss.│
+│  ▸ Geometrie │        (Diagramm mit zwei Achsen)     │  ☑ Pfadstrahl│
+│  ▸ Aerosol   │                                       │  Farbe       │
+│  ▸ Boden     │                                       │              │
+│  ▸ Spektral  │                                       │              │
+│  ▸ Ausgaben  │                                       │              │
+│  [Berechnen] │  x = 4,35 µm  Transmission 0,812 …    │              │
+├──────────────┴───────────────────────────────────────┴──────────────┤
+│  Aufträge und Protokoll: Liste (Status / Fortschritt / Dauer) │ Protokoll │
+├─────────────────────────────────────────────────────────────────────┤
+│ Statusleiste: Cursorwerte                        Kern libradtran 2.0.6 │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>Die drei andockbaren Felder lassen sich verschieben, schließen und neu anordnen; ein geschlossenes Feld wird über das Menü Ansicht oder durch Ziehen am Rand wiederhergestellt.</p>
+<h3 id="symbolleiste">Symbolleiste</h3>
+<table>
+<thead>
+<tr>
+<th>Schaltfläche</th>
+<th>Funktion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Neues / Öffnen / Projekt speichern</td>
+<td>Ein Projekt ist eine JSON-Datei mit allen Parametern und berechneten Ergebnissen</td>
+</tr>
+<tr>
+<td>Voreingestelltes Szenario laden</td>
+<td>Drei mitgelieferte Beispielszenarien; ihre Namen folgen der Oberflächensprache</td>
+</tr>
+<tr>
+<td>Ausführen (F5)</td>
+<td>Berechnet mit den aktuellen Parametern; das Ergebnis wird dem Diagramm hinzugefügt, ohne frühere zu ersetzen</td>
+</tr>
+<tr>
+<td>Alle anhalten</td>
+<td>Bricht alle laufenden Aufträge ab</td>
+</tr>
+<tr>
+<td>Parameter-Sweep / LUT</td>
+<td>Öffnet den Batch-Dialog, siehe Abschnitt 7</td>
+</tr>
+<tr>
+<td>Bild exportieren</td>
+<td>Speichert das aktuelle Diagramm als PNG / PDF / JPEG</td>
+</tr>
+<tr>
+<td>Zoom zurücksetzen (Pos1)</td>
+<td>Stellt den vollen Bereich des Diagramms wieder her</td>
+</tr>
+<tr>
+<td>X-Achse</td>
+<td>Einheit der horizontalen Achse: µm / nm / cm⁻¹; wirkt sofort</td>
+</tr>
+<tr>
+<td>Spektrale Dichte</td>
+<td>Einheit der spektralen Dichte radiometrischer Größen: pro µm / pro nm / pro cm⁻¹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bedienung-des-diagramms">Bedienung des Diagramms</h3>
+<table>
+<thead>
+<tr>
+<th>Aktion</th>
+<th>Wirkung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mausrad</td>
+<td>Zoom um den Cursor</td>
+</tr>
+<tr>
+<td>Ziehen</td>
+<td>Verschieben</td>
+</tr>
+<tr>
+<td>Doppelklick</td>
+<td>Zurücksetzen</td>
+</tr>
+<tr>
+<td>Maus bewegen</td>
+<td>Untere Zeile und Statusleiste zeigen den Wert jeder Kurve am Cursor</td>
+</tr>
+<tr>
+<td>Kontrollkästchen im Feld Kurven</td>
+<td>Kurve ein-/ausblenden</td>
+</tr>
+<tr>
+<td>Doppelklick auf das Farbfeld</td>
+<td>Kurvenfarbe ändern</td>
+</tr>
+<tr>
+<td>Rechtsklick auf einen Ergebnisnamen</td>
+<td>Ergebnis als CSV exportieren oder entfernen</td>
+</tr>
+</tbody>
+</table>
+<p>Die Transmission wird auf der linken Achse (0 bis 1) gezeichnet; Strahldichte und Bestrahlungsstärke auf der rechten Achse, sodass beide überlagert werden können.</p>
+<hr />
+<h2 id="5-parameterfeld-im-detail">5. Parameterfeld im Detail</h2>
+<h3 id="51-atmosphare">5.1 Atmosphäre</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standardatmosphäre</td>
+<td>Tropisch, mittlere Breiten Sommer, mittlere Breiten Winter, subarktisch Sommer, subarktisch Winter, US-Standard 1976 (die sechs AFGL-Atmosphären) oder eigenes Profil</td>
+</tr>
+<tr>
+<td>Profil importieren (CSV)</td>
+<td>Importiert eine eigene Druck-/Temperatur-/Feuchte-Sondierung, siehe unten</td>
+</tr>
+<tr>
+<td>Wasserdampfsäule</td>
+<td>Wenn aktiviert, wird das gesamte niederschlagbare Wasser auf die angegebenen Millimeter skaliert; sonst gilt der Wert der Standardatmosphäre</td>
+</tr>
+<tr>
+<td>Ozonsäule</td>
+<td>Wie oben, in DU</td>
+</tr>
+<tr>
+<td>CO₂-Mischungsverhältnis</td>
+<td>ppm, Standard 420</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dateiformat des eigenen Profils</strong>: CSV oder durch Leerzeichen getrennter Text mit Kopfzeile. Pflichtspalten: Höhe, Druck, Temperatur und eine Feuchtespalte. Erkannte Spaltennamen (Groß-/Kleinschreibung egal):</p>
+<table>
+<thead>
+<tr>
+<th>Größe</th>
+<th>Spaltennamen</th>
+<th>Einheit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Höhe</td>
+<td>z, alt, altitude, height</td>
+<td>km (<code>z_m</code> für Meter)</td>
+</tr>
+<tr>
+<td>Druck</td>
+<td>p, pres, pressure</td>
+<td>hPa (<code>p_pa</code> für Pa)</td>
+</tr>
+<tr>
+<td>Temperatur</td>
+<td>t, temp, temperature</td>
+<td>K (<code>t_c</code> für °C)</td>
+</tr>
+<tr>
+<td>Feuchte (eine davon)</td>
+<td>rh; q; h2o / h2o_vmr</td>
+<td>relative Feuchte %; spezifische Feuchte g/kg; Volumenmischungsverhältnis ppmv</td>
+</tr>
+<tr>
+<td>Ozon (optional)</td>
+<td>o3, o3_vmr</td>
+<td>ppmv</td>
+</tr>
+</tbody>
+</table>
+<p>Beispiel:</p>
+<pre><code>z_km,p_hpa,t_k,rh
+0.0,1013.0,295.0,70
+1.0,900.0,289.0,65
+2.0,795.0,283.0,55
+5.0,540.0,262.0,40
+10.0,265.0,223.0,20
+</code></pre>
+<p>Oberhalb des importierten Profils werden die Schichten mit der gewählten Standardatmosphäre ergänzt.</p>
+<h3 id="52-geometrie">5.2 Geometrie</h3>
+<table>
+<thead>
+<tr>
+<th>Pfadtyp</th>
+<th>Bedeutung</th>
+<th>Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schrägpfad (Beobachter → Ziel)</td>
+<td>Beobachter und Ziel in unterschiedlicher Höhe</td>
+<td>Beobachterhöhe, Zielhöhe, Blickzenitwinkel</td>
+</tr>
+<tr>
+<td>Horizontaler Pfad</td>
+<td>Beobachter und Ziel in gleicher Höhe</td>
+<td>Beobachterhöhe, Länge des horizontalen Pfads</td>
+</tr>
+<tr>
+<td>Gesamte Säule, vertikal</td>
+<td>Boden bis Atmosphärenoberrand</td>
+<td>Keine</td>
+</tr>
+<tr>
+<td>Nur Himmelsstrahldichte</td>
+<td>Kein Ziel; Strahldichte des Himmels in einer Richtung</td>
+<td>Beobachterhöhe, Blickzenitwinkel, Azimut</td>
+</tr>
+</tbody>
+</table>
+<p>Winkelkonventionen:</p>
+<ul>
+<li><strong>Blickzenitwinkel</strong>: 0° senkrecht nach oben, 90° horizontal, 180° senkrecht nach unten. Er muss unter 90° liegen, wenn das Ziel über dem Beobachter ist, sonst über 90°; andernfalls meldet das Feld einen Fehler.</li>
+<li><strong>Blickazimut</strong>, <strong>Sonnenazimut</strong>: 0° Nord, im Uhrzeigersinn.</li>
+<li><strong>Sonnenzenitwinkel</strong>: beeinflusst nur die radiometrischen Größen des Solarbands, nicht die Transmission.</li>
+<li><strong>Geländehöhe</strong>: Höhe des unteren Endes des Atmosphärenprofils; Beobachter- und Zielhöhe sind Höhen über dem Meeresspiegel.</li>
+</ul>
+<p>Bei Zenitwinkeln zwischen 85° und 95° wechselt die Software für nahezu horizontale Pfade zur schichtweisen Extinktionsintegration und gibt eine Genauigkeitswarnung aus.</p>
+<h3 id="53-aerosol-und-wolke">5.3 Aerosol und Wolke</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aerosoltyp</td>
+<td>Keine, ländlich, städtisch, maritim, troposphärisch (Shettle-Modelle) oder eine OPAC-Mischung</td>
+</tr>
+<tr>
+<td>Sichtweite</td>
+<td>Horizontale Bodensichtweite in km; legt die Aerosolbeladung der Grenzschicht fest</td>
+</tr>
+<tr>
+<td>Jahreszeit</td>
+<td>Profil Frühling/Sommer oder Herbst/Winter</td>
+</tr>
+<tr>
+<td>Stratosphärisches Aerosol</td>
+<td>Hintergrund / mäßig vulkanisch / stark vulkanisch / extrem vulkanisch</td>
+</tr>
+<tr>
+<td>Name der OPAC-Mischung</td>
+<td>Bei OPAC, z. B. continental_average, maritime_clean, urban, desert</td>
+</tr>
+<tr>
+<td>Einzelne Wolkenschicht</td>
+<td>Wasser- oder Eiswolke mit Basis, Oberkante, Wassergehalt und effektivem Radius</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-boden">5.4 Boden</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bodenalbedo</td>
+<td>Solarband, 0 bis 1</td>
+</tr>
+<tr>
+<td>Bodentemperatur</td>
+<td>Emissionstemperatur des Bodens im thermischen Infrarot</td>
+</tr>
+<tr>
+<td>Bodenemissivität</td>
+<td>Thermisches Infrarot, 0 bis 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-spektral">5.5 Spektral</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spektrale Einheit</td>
+<td>µm / nm / cm⁻¹. Die Grenzen werden beim Einheitenwechsel umgerechnet</td>
+</tr>
+<tr>
+<td>Von / bis</td>
+<td>Spektralbereich. Die Software übergibt Solarband (≤ 5 µm) und thermisches Band (≥ 2,5 µm) getrennt an den Kern und fügt die Ergebnisse zusammen</td>
+</tr>
+<tr>
+<td>Ausgabeschritt</td>
+<td>Abstand des Ausgaberasters; 0 verwendet direkt das Raster repräsentativer Wellenlängen des Kerns</td>
+</tr>
+<tr>
+<td>Auflösung des Bandmodells</td>
+<td>Grob 15 cm⁻¹ / mittel 5 cm⁻¹ / fein 1 cm⁻¹ / LOWTRAN 20 cm⁻¹. Feiner ist genauer und langsamer</td>
+</tr>
+<tr>
+<td>Löser</td>
+<td>DISORT (Mehrfachstreuung, Standard) oder Zweistrom. Wird Strahldichte benötigt, wechselt die Software automatisch zu DISORT</td>
+</tr>
+<tr>
+<td>DISORT-Ströme</td>
+<td>Standard 16; bei stark streuenden Fällen (dichtes Aerosol, Wolke) auf 32 erhöhen</td>
+</tr>
+</tbody>
+</table>
+<p>Richtwerte für die Laufzeit (4-Kern-Büro-PC): 3–5 µm Boden-Luft, grob etwa 7 s, mittel etwa 30 s; 8–12 µm horizontal 1 km etwa 2 s.</p>
+<h3 id="56-ausgaben">5.6 Ausgaben</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Bedeutung</th>
+<th>Einheit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pfadtransmission</td>
+<td>Spektrale Transmission vom Beobachter zum Ziel</td>
+<td>dimensionslos</td>
+</tr>
+<tr>
+<td>Pfadstrahldichte</td>
+<td>Von der Atmosphäre entlang des Pfads emittierte und in die Sichtlinie gestreute Strahldichte</td>
+<td>W/(m²·sr·cm⁻¹), umschaltbar</td>
+</tr>
+<tr>
+<td>Himmelsstrahldichte</td>
+<td>Vom Beobachter entlang der Sichtlinie gesehene Himmelsstrahldichte</td>
+<td>wie oben</td>
+</tr>
+<tr>
+<td>Direkte / diffuse abwärts / aufwärts gerichtete Bestrahlungsstärke</td>
+<td>Bestrahlungsstärken in Beobachterhöhe</td>
+<td>W/(m²·cm⁻¹)</td>
+</tr>
+<tr>
+<td>Scheinbare Zielstrahldichte</td>
+<td>Für gegebene Zieltemperatur und -emissivität die vom Beobachter nach atmosphärischer Dämpfung plus Pfadstrahldichte gesehene Strahldichte; die einfallende Strahldichte am Ziel wird ebenfalls ausgegeben</td>
+<td>W/(m²·sr·cm⁻¹)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-typische-arbeitsablaufe">6. Typische Arbeitsabläufe</h2>
+<h3 id="61-einzelberechnung-und-vergleich">6.1 Einzelberechnung und Vergleich</h3>
+<ol>
+<li>Parameter einstellen und auf Ausführen klicken.</li>
+<li>Ein oder zwei Parameter ändern (z. B. Sichtweite von 23 km auf 5 km) und erneut ausführen. Das neue Ergebnis wird demselben Diagramm in anderer Farbe hinzugefügt, mit dem Szenarionamen in der Legende.</li>
+<li>Im Feld Kurven rechts die zu vergleichenden Kurven ein- oder ausblenden.</li>
+<li>Auf die Registerkarte Ergebnistabelle wechseln, um die Zahlen zu lesen; Achsen- und Dichteeinheit folgen der Symbolleiste.</li>
+</ol>
+<h3 id="62-speichern-und-wiederherstellen">6.2 Speichern und Wiederherstellen</h3>
+<p>Datei → Projekt speichern legt die aktuellen Parameter und alle Ergebnisse in einer JSON-Datei ab. Beim späteren Öffnen werden die Kurven ohne Neuberechnung wiederhergestellt.</p>
+<h3 id="63-export">6.3 Export</h3>
+<ul>
+<li>Diagramm: Datei → Bild exportieren oder die Schaltfläche in der Symbolleiste, PNG / PDF / JPEG.</li>
+<li>Daten: Rechtsklick auf ein Ergebnis im Feld Kurven → Dieses Ergebnis als CSV exportieren. Die CSV verwendet die aktuell in der Symbolleiste gewählten Achsen- und Dichteeinheiten; die Kopfzeile nennt die Einheiten.</li>
+</ul>
+<h3 id="64-szenario-zielerfassung">6.4 Szenario Zielerfassung</h3>
+<p>Um die scheinbare Strahldichte eines Ziels am Detektor zu erhalten:</p>
+<ol>
+<li>In Geometrie Schrägpfad wählen, Beobachter- und Zielhöhe sowie Zenitwinkel eingeben.</li>
+<li>Unter Ausgaben Scheinbare Zielstrahldichte aktivieren, Zieltemperatur und -emissivität eingeben.</li>
+<li>Der Lauf liefert vier Kurven: Transmission, Pfadstrahldichte, scheinbare Zielstrahldichte und einfallende Strahldichte am Ziel.</li>
+<li>Ziehen Sie das Ergebnis Nur Himmelsstrahldichte derselben Geometrie von der scheinbaren Zielstrahldichte ab, um den Strahldichtekontrast Ziel/Hintergrund zu erhalten.</li>
+</ol>
+<hr />
+<h2 id="7-parameter-sweeps-und-nachschlagetabellen">7. Parameter-Sweeps und Nachschlagetabellen</h2>
+<p>Berechnen → Parameter-Sweep / LUT… geht vom aktuellen Parameterfeld aus, berechnet jede Kombination (kartesisches Produkt) der gewählten Parameterwerte und schreibt eine Nachschlagetabelle.</p>
+<h3 id="dialogelemente">Dialogelemente</h3>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sweep-Dimensionen</td>
+<td>Ein Parameter je Zeile. Parameter werden als JSON-Zeiger geschrieben; die Auswahlliste nennt die gängigen. Werte sind eine Liste <code>1, 2, 5, 10</code> oder ein Bereich <code>0:10:2</code> (Start:Ende:Schritt); Zeichenkettenparameter werden mit Namen geschrieben, z. B. <code>Rural, Urban</code></td>
+</tr>
+<tr>
+<td>Spalte</td>
+<td>Koordinatenname dieser Dimension in der Ausgabedatei, Standard ist der Parametername</td>
+</tr>
+<tr>
+<td>Ausgaben</td>
+<td>Ist nichts gewählt, werden alle Größen des Szenarios geschrieben</td>
+</tr>
+<tr>
+<td>Bandmittelwerte</td>
+<td>Optional; Bandmittel und Bandintegral über µm-Bänder, zusätzlich geschrieben</td>
+</tr>
+<tr>
+<td>Ausgabedatei</td>
+<td>Die Endung bestimmt das Format: <code>.h5</code> für HDF5, <code>.csv</code> für eine lange Tabelle</td>
+</tr>
+<tr>
+<td>Fortsetzen</td>
+<td>Überspringt bereits berechnete Kombinationen beim erneuten Start nach einer Unterbrechung</td>
+</tr>
+</tbody>
+</table>
+<p>Der Dialog zeigt die Gesamtzahl der Kombinationen und die Zahl der Kernläufe je Kombination. Der Lauf kann abgebrochen werden; fertige Teile bleiben erhalten.</p>
+<h3 id="aufbau-der-hdf5-datei">Aufbau der HDF5-Datei</h3>
+<pre><code>/&lt;Größe&gt;                      [dim1, …, dimN, spektral]   Daten, Einheit im Attribut &quot;units&quot;
+/bands/&lt;Größe&gt;_average        [dim1, …, dimN, Band]       Bandmittel
+/bands/&lt;Größe&gt;_integral       [dim1, …, dimN, Band]       Bandintegral
+/coords/wavenumber            [spektral]                  cm⁻¹
+/coords/wavelength_um         [spektral]                  µm
+/coords/&lt;Spalte&gt;              [Werte]                     Koordinate jeder Dimension (Zahl oder Zeichenkette)
+/coords/band                  [Band]                      Bandnamen
+/filled                       [dim1, …, dimN]             1 = Kombination berechnet
+Wurzelattribute: kernel, kernel_version, created_utc, base_scenario (JSON des Basisszenarios), plan (JSON des Sweep-Plans)
+</code></pre>
+<p>Lesen in Python (benötigt h5py):</p>
+<pre><code class="language-python">import h5py
+with h5py.File(&quot;lut.h5&quot;) as f:
+    T = f[&quot;Transmittance&quot;][...]            # Form [dim1, …, spektral]
+    nu = f[&quot;coords/wavenumber&quot;][...]
+    tgt = f[&quot;coords/target_km&quot;][...]
+</code></pre>
+<p><code>pyqradtran\read_lut_h5.py</code> im Installationsordner ist ein fertiges Anzeigeskript.</p>
+<h3 id="lange-csv-tabelle">Lange CSV-Tabelle</h3>
+<p>Eine Zeile je (Dimensionswerte…, Wellenzahl, Größe, Wert); Bandmittelwerte landen in <code>&lt;Datei&gt;.bands.csv</code>. Geeignet für Excel-Pivottabellen oder pandas.</p>
+<hr />
+<h2 id="8-kommandozeilenwerkzeug">8. Kommandozeilenwerkzeug</h2>
+<p><code>qradtran-cli.exe</code> liegt im Installationsordner; mit aktiviertem „Zum PATH hinzufügen“ funktioniert es von überall.</p>
+<pre><code>qradtran-cli example --out case.json         Vorlage einer Szenariodatei schreiben
+qradtran-cli validate case.json              Parameter prüfen
+qradtran-cli plan case.json                  geplante Kernläufe auflisten, ohne Berechnung
+qradtran-cli run case.json --out out.csv     berechnen und CSV schreiben (--unit um|nm|cm-1  --density cm-1|nm|um)
+qradtran-cli run case.json --out out.json    JSON schreiben (mit Metadaten)
+qradtran-cli batch-example --out plan.json   Vorlage eines Sweep-Plans schreiben
+qradtran-cli batch plan.json --out lut.h5    Batch-Berechnung (.h5 oder .csv; --resume zum Fortsetzen)
+qradtran-cli kernel-info                     Kernstatus und verfügbare Auflösungen anzeigen
+</code></pre>
+<p>Rückgabecodes: 0 Erfolg, 1 Argumentfehler, 2 Validierung fehlgeschlagen, 3 Kernfehler. Szenariodateien und GUI-Projektdateien sind austauschbar.</p>
+<hr />
+<h2 id="9-python-schnittstelle">9. Python-Schnittstelle</h2>
+<p><code>pyqradtran\</code> im Installationsordner ist ein Python-Paket, gebaut für Python 3.10 64 Bit. Fügen Sie den Installationsordner vor der Nutzung zum <code>PYTHONPATH</code> hinzu:</p>
+<pre><code class="language-bat">set PYTHONPATH=C:\Program Files\QRadtran
+python
+</code></pre>
+<pre><code class="language-python">import pyqradtran as qr
+
+s = qr.Scenario.standard(&quot;MidlatitudeSummer&quot;)
+s.geometry.mode = &quot;SlantPath&quot;
+s.geometry.observer_alt_km = 0.0
+s.geometry.target_alt_km = 10.0
+s.geometry.view_zenith_deg = 30.0
+s.aerosol.type = &quot;Rural&quot;
+s.aerosol.visibility_km = 23.0
+s.spectral.set_range(3, 5, unit=&quot;Micrometer&quot;, step=0.01, resolution=&quot;Coarse&quot;)
+s.outputs.transmittance = True
+s.outputs.path_radiance = True
+
+r = qr.run(s)
+nu = r.wavenumber                   # numpy-Array, cm⁻¹
+T = r[&quot;Transmittance&quot;]
+L = r.series(&quot;PathRadiance&quot;, per=&quot;Micrometer&quot;)     # umgerechnet auf pro µm
+print(r.band_average(&quot;Transmittance&quot;, 3.0, 5.0))  # {'average':…, 'integral':…}
+r.to_csv(&quot;out.csv&quot;, unit=&quot;Micrometer&quot;)
+
+# Parameter-Sweep
+plan = qr.BatchPlan()
+plan.base = s
+plan.add_dimension(&quot;/geometry/target_alt_km&quot;, [1, 2, 5, 10], &quot;tgt_km&quot;)
+plan.add_band(&quot;MWIR&quot;, 3.0, 5.0)
+qr.batch(plan, &quot;lut.h5&quot;)
+</code></pre>
+<p>Das vollständige Beispiel ist <code>pyqradtran\python_quickstart.py</code>. Die Bindungen teilen Kernbibliothek und Kern mit der GUI, die Ergebnisse sind identisch.</p>
+<hr />
+<h2 id="10-einstellungen">10. Einstellungen</h2>
+<p>Werkzeuge → Einstellungen:</p>
+<table>
+<thead>
+<tr>
+<th>Punkt</th>
+<th>Beschreibung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uvspec.exe / libRadtran-Datenverzeichnis</td>
+<td>Ort des Kerns, standardmäßig <code>kernels\libradtran</code> im Installationsordner. Normalerweise keine Änderung nötig</td>
+</tr>
+<tr>
+<td>Kern erkennen</td>
+<td>Zeigt Kernversion und installierte Auflösungen</td>
+</tr>
+<tr>
+<td>Max. gleichzeitige Kernprozesse</td>
+<td>0 = automatisch (CPU-Kerne minus 1). Bei knappem Speicher verringern</td>
+</tr>
+<tr>
+<td>Zeitlimit je Kernlauf</td>
+<td>Sekunden. Feine Auflösung, breite Bänder oder viele Ströme können einen höheren Wert erfordern</td>
+</tr>
+<tr>
+<td>Arbeitsverzeichnis bei Fehler behalten</td>
+<td>Behält bei einem Fehlschlag die Ein- und Ausgabedateien des Kerns zur Diagnose; der Ort steht im Protokoll</td>
+</tr>
+<tr>
+<td>Arbeitsverzeichnis auch bei Erfolg behalten</td>
+<td>Nur zur Diagnose, normalerweise aus</td>
+</tr>
+<tr>
+<td>Sprache der Oberfläche</td>
+<td>Dem System folgen oder eine der acht Sprachen festlegen; wirkt nach Neustart</td>
+</tr>
+</tbody>
+</table>
+<p>Arbeitsverzeichnisse werden unter <code>%LOCALAPPDATA%\WaveFront\QRadtran\runs\</code> angelegt.</p>
+<hr />
+<h2 id="11-rechenverfahren-und-genauigkeit">11. Rechenverfahren und Genauigkeit</h2>
+<ul>
+<li><strong>Kern</strong>: uvspec aus libRadtran 2.0.6, als eigener Prozess ausgeführt; molekulare Absorption mit dem REPTRAN-Bandmodell repräsentativer Wellenlängen (basierend auf HITRAN 2004 und später), Mehrfachstreuung mit DISORT.</li>
+<li><strong>Schrägpfad-Transmission</strong>: im Solarband aus dem Verhältnis der direkten Bestrahlungsstärken in beiden Höhen; im thermischen Band aus dem Verhältnis der Strahldichtedifferenzen zweier Läufe mit gestörter Bodentemperatur.</li>
+<li><strong>Horizontale und nahezu horizontale Pfade</strong>: Der Extinktionskoeffizient wird aus der vertikalen Transmission der Schicht abgeleitet und entlang des sphärischen Pfads integriert.</li>
+<li><strong>Pfadstrahldichte</strong>: Strahldichte am Beobachter minus Strahldichte am Ziel mal Transmission.</li>
+<li><strong>Genauigkeit</strong>: Vergleich mit MODTRAN4 in den langwelligen und mittelwelligen atmosphärischen Fenstern; in 6 von 8 Fällen weicht die bandgemittelte Fenstertransmission um weniger als 0,04 ab, im besten Fall um 0,003. Innerhalb starker Absorptionsbanden unterscheiden sich die beiden Generationen spektroskopischer Daten systematisch. Siehe den mitgelieferten Validierungsbericht.</li>
+<li><strong>REPTRAN-Auflösungen</strong>: fein 1 cm⁻¹ entspricht der Klasse des 1-cm⁻¹-Bandmodells von MODTRAN; grob 15 cm⁻¹ eignet sich für schnelle Abschätzungen.</li>
+</ul>
+<hr />
+<h2 id="12-haufige-fragen">12. Häufige Fragen</h2>
+<p><strong>Die Statusleiste zeigt nach dem Start „Kern nicht verfügbar“.</strong>
+Der Installationsordner wurde verschoben oder <code>kernels\libradtran</code> wurde von einem Virenscanner entfernt. Pfade in den Einstellungen prüfen; bei Bedarf neu installieren.</p>
+<p><strong>Die Schaltfläche Ausführen ist ausgegraut.</strong>
+Unter dem Parameterfeld steht eine rote Validierungsmeldung; beheben Sie das Genannte. Häufige Ursachen: Schrägpfad gewählt, aber Zielhöhe gleich Beobachterhöhe; Zenitwinkel widerspricht der Lage des Ziels oben/unten; identische Spektralgrenzen.</p>
+<p><strong>Der Lauf scheitert, im Protokoll steht „Netcdf error … reptran_…_medium“.</strong>
+Die Datentabellen der gewählten Auflösung fehlen. Das vollständige Installationsprogramm enthält alle drei; bei einem reduzierten Paket Grob verwenden oder die Daten nachinstallieren.</p>
+<p><strong>Die Transmission im thermischen Infrarot ist überall null.</strong>
+Trat in Versionen vor 0.2.0 mit dem Zweistromlöser auf; behoben – DISORT wird automatisch verwendet, wenn Strahldichte benötigt wird.</p>
+<p><strong>Die Berechnung ist langsam.</strong>
+Feine Auflösung mit breitem Band und 32 Strömen ist am langsamsten. Parameter mit grober Auflösung abstimmen und das endgültige Diagramm mit feiner Auflösung erzeugen; bei Batches alle verfügbaren Prozesse nutzen.</p>
+<p><strong>Die Werte der rechten Achse sind schwer zu deuten.</strong>
+Die rechte Achse zeigt radiometrische Größen; die Einheit folgt der Einstellung Spektrale Dichte in der Symbolleiste: pro cm⁻¹, pro nm oder pro µm. Tabellen und CSV verwenden dieselbe Einstellung.</p>
+<p><strong>Die Oberfläche ist englisch.</strong>
+Ist die Windows-Anzeigesprache nicht unter den unterstützten, fällt die Software auf Englisch zurück. Sprache unter Werkzeuge → Einstellungen → Sprache der Oberfläche wählen und neu starten.</p>
+<p><strong>Python meldet „DLL load failed“.</strong>
+<code>PYTHONPATH</code> muss auf den Installationsordner selbst zeigen (die Ebene mit <code>qradtran_core.dll</code> und <code>Qt6Core.dll</code>), nicht auf den Unterordner <code>pyqradtran</code>; Python muss 3.10 64 Bit sein.</p>
+<p><strong>Kann ich mein eigenes libRadtran verwenden?</strong>
+Ja. Richten Sie uvspec.exe und das Datenverzeichnis in den Einstellungen auf Ihre Version; sie muss 2.0.x sein.</p>
+<hr />
+<h2 id="13-deinstallation">13. Deinstallation</h2>
+<p>Deinstallieren Sie QRadtran über Einstellungen → Apps oder starten Sie QRadtran deinstallieren im Startmenü. Die Deinstallation belässt die Projektdateien des Benutzers und die Laufaufzeichnungen unter <code>%LOCALAPPDATA%\WaveFront\QRadtran</code>; löschen Sie sie bei Bedarf von Hand.</p>
+<p>Bei der portablen Variante genügt das Löschen des Ordners.</p>
+<hr />
+<h2 id="14-dateien-und-ordner">14. Dateien und Ordner</h2>
+<pre><code>QRadtran\
+├── QRadtran.exe              grafische Oberfläche
+├── qradtran-cli.exe          Kommandozeile
+├── qradtran_core.dll         Kernbibliothek
+├── Qt6*.dll, platforms\, styles\, translations\ …   Qt-Laufzeit
+├── hdf5.dll, msvcp140.dll, vcruntime140*.dll        HDF5 und VC++-Laufzeit
+├── kernels\libradtran\
+│   ├── bin\uvspec.exe        Rechenkern (MinGW-Build) und seine Laufzeit
+│   ├── data\                 Atmosphärenprofile, Aerosol, Wolken, Sonnenspektren und REPTRAN-Tabellen
+│   ├── source\               libRadtran-Quellarchiv, Patches und Build-Skript (GPL-Anforderung)
+│   └── VERSION
+├── data\presets\             Beispielszenarien
+├── pyqradtran\               Python-Bindungen und Beispiele
+├── licenses\                 Lizenztexte Dritter
+└── doc\                      dieses Handbuch (md und html in acht Sprachen)
+</code></pre>
+<p>Projektdateien (<code>.json</code>) sowie exportierte CSV / HDF5 / Bilder werden am vom Benutzer gewählten Ort gespeichert.</p>
+<hr />
+<h2 id="support">Support</h2>
+<p>Wuhan WaveFront Co., Ltd.　　WeChat: angaio</p>
+</main></body></html>

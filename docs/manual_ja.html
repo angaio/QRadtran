@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>QRadtran インストール・操作説明書</title>
+<style>
+ body { font-family: "Yu Gothic UI", "Meiryo", "Segoe UI", sans-serif; color:#111620; background:#f6f7f9; margin:0; }
+ main { max-width: 960px; margin: 0 auto; padding: 32px 40px 60px; background:#fff; }
+ h1 { border-bottom: 3px solid #0e58a8; padding-bottom: 8px; }
+ h2 { color:#0e58a8; margin-top: 2.2em; border-bottom: 1px solid #d8dce2; padding-bottom: 4px; }
+ h3 { color:#46505a; }
+ table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+ th, td { border: 1px solid #d8dce2; padding: 6px 10px; text-align: left; vertical-align: top; }
+ th { background: #eef1f5; }
+ code { background:#eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+ pre { background:#111620; color:#f5f7fa; padding: 12px 16px; border-radius: 6px; overflow-x:auto; font-size:13px; }
+ pre code { background: none; color: inherit; padding: 0; }
+ a { color:#0e58a8; }
+ strong { color:#c6282c; }
+</style></head><body><main>
+<h1 id="qradtran">QRadtran インストール・操作説明書</h1>
+<p><strong>バージョン</strong> 0.3.0　　<strong>日付</strong> 2026-09-19　　<strong>発行</strong> Wuhan WaveFront Co., Ltd.</p>
+<p>本説明書は 简体中文・English・Русский・한국어・Français・Deutsch・Español 版もあります。インストール後、すべての版がインストール先の <code>doc\</code> フォルダーに置かれます。</p>
+<p>QRadtran は赤外線・光電システム技術者向けの大気透過率・放射輝度計算ソフトウェアです。Windows 上のグラフィカルな画面で、斜め経路および水平経路の分光透過率、経路放射輝度と天空放射輝度、目標の見かけ放射輝度を計算します。複数曲線の比較、パラメータ掃引によるルックアップテーブル生成（CSV / HDF5）、コマンドラインツール、Python インターフェースに対応しています。計算カーネルはオープンソースの libRadtran で、ソフトウェアと一緒にインストールされるため追加の設定は不要です。</p>
+<hr />
+<h2 id="_1">目次</h2>
+<ol>
+<li><a href="#1-動作環境">動作環境</a></li>
+<li><a href="#2-インストール">インストール</a></li>
+<li><a href="#3-初回起動">初回起動</a></li>
+<li><a href="#4-画面の概要">画面の概要</a></li>
+<li><a href="#5-パラメータパネルの詳細">パラメータパネルの詳細</a></li>
+<li><a href="#6-代表的な操作の流れ">代表的な操作の流れ</a></li>
+<li><a href="#7-パラメータ掃引とルックアップテーブル">パラメータ掃引とルックアップテーブル</a></li>
+<li><a href="#8-コマンドラインツール">コマンドラインツール</a></li>
+<li><a href="#9-python-インターフェース">Python インターフェース</a></li>
+<li><a href="#10-設定">設定</a></li>
+<li><a href="#11-計算方法と精度">計算方法と精度</a></li>
+<li><a href="#12-よくある質問">よくある質問</a></li>
+<li><a href="#13-アンインストール">アンインストール</a></li>
+<li><a href="#14-ファイルとフォルダー">ファイルとフォルダー</a></li>
+</ol>
+<hr />
+<h2 id="1">1. 動作環境</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OS</td>
+<td>Windows 10 / 11、64 ビット</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>4 コア以上。カーネルは複数プロセスを並列実行するため、コア数が多いほどバッチ計算が速くなります</td>
+</tr>
+<tr>
+<td>メモリ</td>
+<td>8 GB 以上</td>
+</tr>
+<tr>
+<td>ディスク</td>
+<td>インストール後約 1.2 GB（3 段階すべての分解能のスペクトル表を含む）。細分解能の計算は読み込み量が多いため SSD を推奨</td>
+</tr>
+<tr>
+<td>画面</td>
+<td>1600 × 900 以上</td>
+</tr>
+<tr>
+<td>その他</td>
+<td>Python・MSYS2・WSL は不要。VC++ ランタイムは同梱</td>
+</tr>
+</tbody>
+</table>
+<p>Python インターフェースは任意機能で、システムの Python 3.10 64 ビットと numpy が必要です。</p>
+<hr />
+<h2 id="2">2. インストール</h2>
+<ol>
+<li><code>QRadtran-0.3.0-Setup-x64.exe</code> をダブルクリックします。</li>
+<li>インストーラーの言語（简体中文、English、Русский、日本語、한국어、Français、Deutsch、Español）を選びます。選んだ言語はソフトウェアの表示言語として記録され、後から「ツール → 設定」で変更できます。</li>
+<li>サードパーティライセンスの説明を読み、「次へ」をクリックします。</li>
+<li>インストール先を選びます。既定は <code>C:\Program Files\QRadtran</code> です。パスに日本語を含めても構いませんが、ネットワークドライブは推奨しません。</li>
+<li>追加タスク：</li>
+<li><strong>デスクトップにショートカットを作成</strong>：既定でオン。</li>
+<li><strong>インストールフォルダーを PATH に追加</strong>：既定でオフ。オンにすると任意のコマンドプロンプトから <code>qradtran-cli</code> を実行できます。</li>
+<li>「インストール」をクリックし、ファイルのコピー（1〜3 分）を待ちます。</li>
+<li>完了ページからソフトウェアの起動や本説明書の表示ができます。</li>
+</ol>
+<p>インストーラーには管理者権限が必要です。現在のユーザーだけにインストールする場合は権限の確認で「自分専用にインストール」を選びます。その場合の既定フォルダーは <code>%LOCALAPPDATA%\Programs\QRadtran</code> になります。</p>
+<h3 id="_2">インストール不要で使う</h3>
+<p>インストーラーを使わず、配布フォルダー <code>QRadtran\</code> 全体を任意の場所にコピーして <code>QRadtran.exe</code> を直接実行することもできます。依存ファイルはすべてフォルダー内にあり、フォルダーを削除すればアンインストール完了です。</p>
+<hr />
+<h2 id="3">3. 初回起動</h2>
+<p>起動したら、まずウィンドウ右下のステータスバーを確認します：</p>
+<pre><code>カーネル libradtran 2.0.6 | 7 プロセス
+</code></pre>
+<p>この表示があれば計算カーネルは準備完了です。「プロセス」は同時に実行するカーネルプロセス数です。「カーネルを利用できません」と表示される場合は「ツール → 設定」でカーネルのパスを確認してください（第 10 節）。</p>
+<p><strong>表示言語</strong>：既定では Windows の表示言語に従い、簡体字中国語・英語・ロシア語・日本語・韓国語・フランス語・ドイツ語・スペイン語に対応します。「ツール → 設定 → 表示言語」で選択して再起動すると反映されます。コマンドライン引数で一時的に指定することもできます（例：<code>QRadtran.exe --lang ja</code>）。</p>
+<p>初回はプリセットシナリオから始めることをお勧めします：</p>
+<ol>
+<li>メニュー「ファイル → プリセットシナリオを読み込む…」で <code>mls_ground_to_air_3_5um.json</code>（中緯度夏の大気、地上から高度 10 km の目標を見る、3〜5 µm）を選びます。</li>
+<li>ツールバーの「実行」をクリックするか F5 を押します。</li>
+<li>下部の「ジョブとログ」にジョブが 1 行現れ、進捗バーが完了すると中央に曲線が表示されます。青は透過率（左軸）、暖色は放射量（右軸）です。所要時間は約 7 秒です。</li>
+</ol>
+<hr />
+<h2 id="4">4. 画面の概要</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ ファイル  計算  表示  ツール  ヘルプ                                   │
+│ [新規][開く][保存] │ [▶実行][■停止][掃引] │ [画像出力][ズームリセット] │ X 軸  密度 │
+├──────────────┬───────────────────────────────────────┬──────────────┤
+│  パラメータ   │  スペクトル / 結果テーブル              │  曲線         │
+│  ▸ 大気      │                                       │  ☑ 透過率     │
+│  ▸ 幾何      │        （2 軸スペクトルグラフ）          │  ☑ 経路放射   │
+│  ▸ エアロゾル │                                       │  色 / 表示    │
+│  ▸ 地表      │                                       │              │
+│  ▸ スペクトル │                                       │              │
+│  ▸ 出力項目   │                                       │              │
+│  [計算を実行] │  x = 4.35 µm  透過率 0.812 …           │              │
+├──────────────┴───────────────────────────────────────┴──────────────┤
+│  ジョブとログ：ジョブ一覧（状態 / 進捗 / 時間） │ ログ（カーネル呼び出しと警告） │
+├─────────────────────────────────────────────────────────────────────┤
+│ ステータスバー：カーソル読み取り値              カーネル libradtran 2.0.6 │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>3 つのドックパネルはドラッグ・閉じる・並べ替えができます。閉じたパネルは「表示」メニューまたは端のドラッグで復元できます。</p>
+<h3 id="_3">ツールバー</h3>
+<table>
+<thead>
+<tr>
+<th>ボタン</th>
+<th>機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新規 / 開く / プロジェクトを保存</td>
+<td>プロジェクトは全パラメータと計算済み結果を保存する 1 つの JSON ファイルです</td>
+</tr>
+<tr>
+<td>プリセットシナリオを読み込む</td>
+<td>同梱の 3 つのサンプルシナリオ。名前は表示言語に従います</td>
+</tr>
+<tr>
+<td>実行（F5）</td>
+<td>現在のパラメータで計算し、結果を既存の曲線に追加します（上書きしません）</td>
+</tr>
+<tr>
+<td>すべて停止</td>
+<td>実行中のジョブをすべてキャンセルします</td>
+</tr>
+<tr>
+<td>パラメータ掃引 / LUT</td>
+<td>バッチ計算ダイアログを開きます（第 7 節）</td>
+</tr>
+<tr>
+<td>画像を出力</td>
+<td>現在のグラフを PNG / PDF / JPEG で保存します</td>
+</tr>
+<tr>
+<td>ズームをリセット（Home）</td>
+<td>グラフを全範囲に戻します</td>
+</tr>
+<tr>
+<td>X 軸</td>
+<td>横軸の単位：µm / nm / cm⁻¹。切り替えは即時反映</td>
+</tr>
+<tr>
+<td>スペクトル密度</td>
+<td>放射量のスペクトル密度単位：µm あたり / nm あたり / cm⁻¹ あたり</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">グラフの操作</h3>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>マウスホイール</td>
+<td>カーソル位置を中心にズーム</td>
+</tr>
+<tr>
+<td>ドラッグ</td>
+<td>パン</td>
+</tr>
+<tr>
+<td>ダブルクリック</td>
+<td>リセット</td>
+</tr>
+<tr>
+<td>マウス移動</td>
+<td>下段とステータスバーにカーソル位置の各曲線の値を表示</td>
+</tr>
+<tr>
+<td>曲線パネルのチェックボックス</td>
+<td>曲線の表示 / 非表示</td>
+</tr>
+<tr>
+<td>色見本をダブルクリック</td>
+<td>曲線の色を変更</td>
+</tr>
+<tr>
+<td>結果名を右クリック</td>
+<td>その結果を CSV に出力、または削除</td>
+</tr>
+</tbody>
+</table>
+<p>透過率は左軸（0〜1）、放射輝度と放射照度は右軸に描かれるため、重ねて表示できます。</p>
+<hr />
+<h2 id="5">5. パラメータパネルの詳細</h2>
+<h3 id="51">5.1 大気</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>標準大気</td>
+<td>熱帯、中緯度夏、中緯度冬、亜北極夏、亜北極冬、米国標準大気 1976（AFGL の 6 種）、またはカスタムプロファイル</td>
+</tr>
+<tr>
+<td>プロファイルを読み込む (CSV)</td>
+<td>独自の気圧・気温・湿度の高層観測データを読み込みます（下記参照）</td>
+</tr>
+<tr>
+<td>水蒸気カラム量</td>
+<td>オンにすると可降水量を指定のミリメートルに合わせてスケーリングします。オフなら標準大気の値を使用</td>
+</tr>
+<tr>
+<td>オゾンカラム量</td>
+<td>同上、単位 DU</td>
+</tr>
+<tr>
+<td>CO₂ 混合比</td>
+<td>ppm、既定 420</td>
+</tr>
+</tbody>
+</table>
+<p><strong>カスタムプロファイルのファイル形式</strong>：CSV または空白区切りテキストで、先頭行は列名です。必須列は高度・気圧・気温と湿度列 1 つ。認識する列名（大文字小文字区別なし）：</p>
+<table>
+<thead>
+<tr>
+<th>量</th>
+<th>列名</th>
+<th>単位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高度</td>
+<td>z, alt, altitude, height</td>
+<td>km（<code>z_m</code> ならメートル）</td>
+</tr>
+<tr>
+<td>気圧</td>
+<td>p, pres, pressure</td>
+<td>hPa（<code>p_pa</code> なら Pa）</td>
+</tr>
+<tr>
+<td>気温</td>
+<td>t, temp, temperature</td>
+<td>K（<code>t_c</code> なら ℃）</td>
+</tr>
+<tr>
+<td>湿度（いずれか 1 つ）</td>
+<td>rh；q；h2o / h2o_vmr</td>
+<td>相対湿度 %；比湿 g/kg；体積混合比 ppmv</td>
+</tr>
+<tr>
+<td>オゾン（任意）</td>
+<td>o3, o3_vmr</td>
+<td>ppmv</td>
+</tr>
+</tbody>
+</table>
+<p>例：</p>
+<pre><code>z_km,p_hpa,t_k,rh
+0.0,1013.0,295.0,70
+1.0,900.0,289.0,65
+2.0,795.0,283.0,55
+5.0,540.0,262.0,40
+10.0,265.0,223.0,20
+</code></pre>
+<p>読み込んだプロファイルより上の高度は、選択した標準大気で補完されます。</p>
+<h3 id="52">5.2 幾何</h3>
+<table>
+<thead>
+<tr>
+<th>経路の種類</th>
+<th>意味</th>
+<th>関連パラメータ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>斜め経路（観測者→目標）</td>
+<td>観測者と目標の高度が異なる</td>
+<td>観測者高度、目標高度、観測天頂角</td>
+</tr>
+<tr>
+<td>水平経路</td>
+<td>観測者と目標が同じ高度</td>
+<td>観測者高度、水平経路長</td>
+</tr>
+<tr>
+<td>全層鉛直</td>
+<td>地表から大気上端まで</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>天空放射輝度のみ</td>
+<td>目標なし。ある方向の天空放射輝度を見る</td>
+<td>観測者高度、観測天頂角、方位角</td>
+</tr>
+</tbody>
+</table>
+<p>角度の規約：</p>
+<ul>
+<li><strong>観測天頂角</strong>：0° が真上、90° が水平、180° が真下。目標が観測者より上なら 90° 未満、下なら 90° 超でなければならず、そうでない場合はパネルがエラーを表示します。</li>
+<li><strong>観測方位角</strong>、<strong>太陽方位角</strong>：北を 0°、時計回り。</li>
+<li><strong>太陽天頂角</strong>：太陽波長域の放射量にのみ影響し、透過率には影響しません。</li>
+<li><strong>地表標高</strong>：大気プロファイル最下端の高度。観測者・目標の高度は海抜です。</li>
+</ul>
+<p>天頂角が 85°〜95° の場合、ほぼ水平な経路として層別消散積分に切り替わり、精度に関する警告が表示されます。</p>
+<h3 id="53">5.3 エアロゾルと雲</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>エアロゾルの種類</td>
+<td>なし、田園、都市、海洋、対流圏（Shettle モデル）、または OPAC 混合</td>
+</tr>
+<tr>
+<td>視程</td>
+<td>地上水平視程（km）。境界層のエアロゾル濃度を決めます</td>
+</tr>
+<tr>
+<td>季節</td>
+<td>春夏 / 秋冬プロファイル</td>
+</tr>
+<tr>
+<td>成層圏エアロゾル</td>
+<td>背景 / 中程度の火山性 / 強い火山性 / 極端な火山性</td>
+</tr>
+<tr>
+<td>OPAC 混合名</td>
+<td>OPAC 選択時に指定。例：continental_average、maritime_clean、urban、desert</td>
+</tr>
+<tr>
+<td>単層の雲</td>
+<td>水雲または氷雲。雲底・雲頂・含水量・有効半径を指定</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54">5.4 地表</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>地表アルベド</td>
+<td>太陽波長域用、0〜1</td>
+</tr>
+<tr>
+<td>地表温度</td>
+<td>熱赤外域の地表放射温度</td>
+</tr>
+<tr>
+<td>地表放射率</td>
+<td>熱赤外域用、0〜1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55">5.5 スペクトル</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>スペクトル単位</td>
+<td>µm / nm / cm⁻¹。切り替え時に開始・終了値は自動換算</td>
+</tr>
+<tr>
+<td>開始 / 終了</td>
+<td>スペクトル範囲。太陽域（≤ 5 µm）と熱赤外域（≥ 2.5 µm）を別々にカーネルへ渡し、結果を結合します</td>
+</tr>
+<tr>
+<td>出力刻み</td>
+<td>出力グリッド間隔。0 ならカーネルの代表波長グリッドをそのまま使用</td>
+</tr>
+<tr>
+<td>バンドモデル分解能</td>
+<td>粗 15 cm⁻¹ / 中 5 cm⁻¹ / 細 1 cm⁻¹ / LOWTRAN 20 cm⁻¹。細かいほど高精度で低速</td>
+</tr>
+<tr>
+<td>ソルバー</td>
+<td>DISORT（多重散乱、既定）または二流近似。放射輝度が必要な場合は自動的に DISORT に切り替わります</td>
+</tr>
+<tr>
+<td>DISORT ストリーム数</td>
+<td>既定 16。散乱の強い条件（濃いエアロゾル、雲）では 32 に増やせます</td>
+</tr>
+</tbody>
+</table>
+<p>所要時間の目安（4 コアのオフィス PC）：3〜5 µm 地対空で粗分解能約 7 秒、中分解能約 30 秒。8〜12 µm 水平 1 km で約 2 秒。</p>
+<h3 id="56">5.6 出力項目</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>意味</th>
+<th>単位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>経路透過率</td>
+<td>観測者から目標までの分光透過率</td>
+<td>無次元</td>
+</tr>
+<tr>
+<td>経路放射輝度</td>
+<td>経路上の大気自身の放射と散乱が視線に入る放射輝度</td>
+<td>W/(m²·sr·cm⁻¹)、切り替え可</td>
+</tr>
+<tr>
+<td>天空放射輝度</td>
+<td>観測者位置で視線方向に見える天空放射輝度</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>直達 / 下向き散乱 / 上向き放射照度</td>
+<td>観測者高度における放射照度</td>
+<td>W/(m²·cm⁻¹)</td>
+</tr>
+<tr>
+<td>目標の見かけ放射輝度</td>
+<td>指定した目標温度と放射率に対し、大気減衰後に経路放射を加えて観測者が見る放射輝度。目標位置での入射放射輝度も同時に出力</td>
+<td>W/(m²·sr·cm⁻¹)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6">6. 代表的な操作の流れ</h2>
+<h3 id="61">6.1 単発計算と比較</h3>
+<ol>
+<li>パラメータを設定して「実行」をクリックします。</li>
+<li>パラメータを 1〜2 つ変更し（例：視程 23 km → 5 km）、再度実行します。新しい結果は同じグラフに別の色で追加され、凡例にシナリオ名が付きます。</li>
+<li>右側の曲線パネルで比較したい曲線をオン / オフします。</li>
+<li>「結果テーブル」タブで数値を確認します。横軸とスペクトル密度の単位はツールバーの設定に従います。</li>
+</ol>
+<h3 id="62">6.2 保存と復元</h3>
+<p>「ファイル → プロジェクトを保存」で現在のパラメータと全結果を 1 つの JSON ファイルに保存します。次回そのファイルを開くと、再計算なしで曲線が復元されます。</p>
+<h3 id="63">6.3 出力</h3>
+<ul>
+<li>グラフ：「ファイル → 画像を出力」またはツールバーのボタン。PNG / PDF / JPEG。</li>
+<li>データ：右側の曲線パネルで結果を右クリック →「この結果を CSV に出力」。CSV の横軸単位とスペクトル密度単位はツールバーの現在の設定に従い、ヘッダーに単位が記されます。</li>
+</ul>
+<h3 id="64">6.4 目標探知シナリオ</h3>
+<p>検出器位置での目標の見かけ放射輝度を得るには：</p>
+<ol>
+<li>幾何で「斜め経路」を選び、観測者高度・目標高度・天頂角を入力します。</li>
+<li>出力項目で「目標の見かけ放射輝度」をオンにし、目標温度と放射率を入力します。</li>
+<li>実行すると 4 本の曲線（透過率、経路放射輝度、目標の見かけ放射輝度、目標位置での入射放射輝度）が得られます。</li>
+<li>同じ幾何で「天空放射輝度のみ」を計算した背景を目標の見かけ放射輝度から引くと、目標と背景の放射コントラストになります。</li>
+</ol>
+<hr />
+<h2 id="7">7. パラメータ掃引とルックアップテーブル</h2>
+<p>「計算 → パラメータ掃引 / LUT…」は現在のパラメータパネルを基準に、複数パラメータの直積を順に計算してルックアップテーブルを出力します。</p>
+<h3 id="_5">ダイアログの項目</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>掃引の次元</td>
+<td>1 行につき 1 パラメータ。パラメータは JSON ポインタで記述し、ドロップダウンに主なものが並びます。値はリスト <code>1, 2, 5, 10</code> または範囲 <code>0:10:2</code>（開始:終了:刻み）。文字列型パラメータは名前を直接書きます（例：<code>Rural, Urban</code>）</td>
+</tr>
+<tr>
+<td>列名</td>
+<td>出力ファイル内でのその次元の座標名。既定はパラメータ名</td>
+</tr>
+<tr>
+<td>出力量</td>
+<td>未選択の場合はシナリオの全量を出力</td>
+</tr>
+<tr>
+<td>帯域平均</td>
+<td>任意。µm 帯域ごとの帯域平均と帯域積分を併せて書き込みます</td>
+</tr>
+<tr>
+<td>出力ファイル</td>
+<td>拡張子で形式が決まります：<code>.h5</code> は HDF5、<code>.csv</code> は縦長の表</td>
+</tr>
+<tr>
+<td>再開</td>
+<td>中断後に再実行するとき、完了済みの組み合わせをスキップ</td>
+</tr>
+</tbody>
+</table>
+<p>ダイアログには組み合わせ総数と各組み合わせに必要なカーネル実行回数が表示されます。実行中にキャンセルでき、完了分は保持されます。</p>
+<h3 id="hdf5">HDF5 ファイル構成</h3>
+<pre><code>/&lt;量名&gt;                       [次元1, …, 次元N, スペクトル]   データ。単位は属性 units
+/bands/&lt;量名&gt;_average         [次元1, …, 次元N, 帯域]        帯域平均
+/bands/&lt;量名&gt;_integral        [次元1, …, 次元N, 帯域]        帯域積分
+/coords/wavenumber            [スペクトル]                   cm⁻¹
+/coords/wavelength_um         [スペクトル]                   µm
+/coords/&lt;列名&gt;                [値の数]                       各次元の座標（数値または文字列）
+/coords/band                  [帯域]                         帯域名
+/filled                       [次元1, …, 次元N]              1 = 計算済み
+ルート属性：kernel、kernel_version、created_utc、base_scenario（基準シナリオ JSON）、plan（掃引計画 JSON）
+</code></pre>
+<p>Python での読み込み（h5py が必要）：</p>
+<pre><code class="language-python">import h5py
+with h5py.File(&quot;lut.h5&quot;) as f:
+    T = f[&quot;Transmittance&quot;][...]            # 形状 [次元1, …, スペクトル]
+    nu = f[&quot;coords/wavenumber&quot;][...]
+    tgt = f[&quot;coords/target_km&quot;][...]
+</code></pre>
+<p>インストールフォルダーの <code>pyqradtran\read_lut_h5.py</code> は、そのまま使える閲覧スクリプトです。</p>
+<h3 id="csv">CSV 縦長テーブル</h3>
+<p>1 行が（次元値…、波数、量名、値）。帯域平均は <code>&lt;ファイル名&gt;.bands.csv</code> に別途保存されます。Excel のピボットや pandas での読み込みに適しています。</p>
+<hr />
+<h2 id="8">8. コマンドラインツール</h2>
+<p><code>qradtran-cli.exe</code> はインストールフォルダーにあります。「PATH に追加」をオンにしていれば任意の場所から使えます。</p>
+<pre><code>qradtran-cli example --out case.json         シナリオファイルのテンプレートを生成
+qradtran-cli validate case.json              パラメータを検査
+qradtran-cli plan case.json                  実行されるカーネル実行を列挙（計算なし）
+qradtran-cli run case.json --out out.csv     計算して CSV を出力（--unit um|nm|cm-1  --density cm-1|nm|um）
+qradtran-cli run case.json --out out.json    JSON を出力（メタデータ付き）
+qradtran-cli batch-example --out plan.json   パラメータ掃引のテンプレートを生成
+qradtran-cli batch plan.json --out lut.h5    バッチ計算（.h5 または .csv。--resume で再開）
+qradtran-cli kernel-info                     カーネルの状態と利用可能な分解能を表示
+</code></pre>
+<p>終了コード：0 成功、1 引数エラー、2 検証失敗、3 カーネル失敗。シナリオファイルと GUI のプロジェクトファイルは共通です。</p>
+<hr />
+<h2 id="9-python">9. Python インターフェース</h2>
+<p>インストールフォルダーの <code>pyqradtran\</code> は Python 3.10 64 ビット向けにビルドされた Python パッケージです。使用前にインストールフォルダーを <code>PYTHONPATH</code> に追加します：</p>
+<pre><code class="language-bat">set PYTHONPATH=C:\Program Files\QRadtran
+python
+</code></pre>
+<pre><code class="language-python">import pyqradtran as qr
+
+s = qr.Scenario.standard(&quot;MidlatitudeSummer&quot;)
+s.geometry.mode = &quot;SlantPath&quot;
+s.geometry.observer_alt_km = 0.0
+s.geometry.target_alt_km = 10.0
+s.geometry.view_zenith_deg = 30.0
+s.aerosol.type = &quot;Rural&quot;
+s.aerosol.visibility_km = 23.0
+s.spectral.set_range(3, 5, unit=&quot;Micrometer&quot;, step=0.01, resolution=&quot;Coarse&quot;)
+s.outputs.transmittance = True
+s.outputs.path_radiance = True
+
+r = qr.run(s)
+nu = r.wavenumber                   # numpy 配列、cm⁻¹
+T = r[&quot;Transmittance&quot;]
+L = r.series(&quot;PathRadiance&quot;, per=&quot;Micrometer&quot;)     # µm あたりに換算
+print(r.band_average(&quot;Transmittance&quot;, 3.0, 5.0))  # {'average':…, 'integral':…}
+r.to_csv(&quot;out.csv&quot;, unit=&quot;Micrometer&quot;)
+
+# パラメータ掃引
+plan = qr.BatchPlan()
+plan.base = s
+plan.add_dimension(&quot;/geometry/target_alt_km&quot;, [1, 2, 5, 10], &quot;tgt_km&quot;)
+plan.add_band(&quot;MWIR&quot;, 3.0, 5.0)
+qr.batch(plan, &quot;lut.h5&quot;)
+</code></pre>
+<p>完全な例は <code>pyqradtran\python_quickstart.py</code> にあります。バインディングは GUI と同じコアライブラリとカーネルを使うため、結果は完全に一致します。</p>
+<hr />
+<h2 id="10">10. 設定</h2>
+<p>「ツール → 設定」：</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uvspec.exe / libRadtran データディレクトリ</td>
+<td>カーネルの場所。既定はインストールフォルダー内の <code>kernels\libradtran</code>。通常は変更不要</td>
+</tr>
+<tr>
+<td>カーネルを検出</td>
+<td>カーネルのバージョンとインストール済み分解能を表示</td>
+</tr>
+<tr>
+<td>カーネルの最大同時プロセス数</td>
+<td>0 は自動（CPU コア数 − 1）。メモリ不足時は減らします</td>
+</tr>
+<tr>
+<td>カーネル実行のタイムアウト</td>
+<td>秒。細分解能・広い波長域・多いストリーム数では大きくする必要があります</td>
+</tr>
+<tr>
+<td>失敗時に作業ディレクトリを保持</td>
+<td>カーネル失敗時に入出力ファイルを診断用に残します。場所はログに表示</td>
+</tr>
+<tr>
+<td>成功時も作業ディレクトリを保持</td>
+<td>診断用。通常はオフ</td>
+</tr>
+<tr>
+<td>表示言語</td>
+<td>システムに従う、または 8 言語のいずれかに固定。再起動後に反映</td>
+</tr>
+</tbody>
+</table>
+<p>作業ディレクトリは <code>%LOCALAPPDATA%\WaveFront\QRadtran\runs\</code> に作成されます。</p>
+<hr />
+<h2 id="11">11. 計算方法と精度</h2>
+<ul>
+<li><strong>カーネル</strong>：libRadtran 2.0.6 の uvspec を別プロセスとして実行。分子吸収は REPTRAN 代表波長バンドモデル（HITRAN 2004 以降に基づく）、多重散乱は DISORT。</li>
+<li><strong>斜め経路の透過率</strong>：太陽域は 2 つの高度における直達放射照度の比から、熱赤外域は地表温度を摂動した 2 回の実行の放射輝度差の比から求めます。</li>
+<li><strong>水平・ほぼ水平な経路</strong>：層の鉛直透過率から消散係数を導き、球面幾何の経路に沿って積分します。</li>
+<li><strong>経路放射輝度</strong>：観測者位置の放射輝度から、目標位置の放射輝度に透過率を掛けたものを引きます。</li>
+<li><strong>精度</strong>：長波・中波の大気の窓で MODTRAN4 と比較し、8 例中 6 例で窓領域の帯域平均透過率の差が 0.04 以内、最良で 0.003。強い吸収帯内では 2 世代の分光データに系統的な差があります。詳細は同梱の検証報告を参照してください。</li>
+<li><strong>REPTRAN の 3 段階</strong>：細 1 cm⁻¹ は MODTRAN の 1 cm⁻¹ バンドモデルと同等クラス。粗 15 cm⁻¹ は迅速な見積もりに適します。</li>
+</ul>
+<hr />
+<h2 id="12">12. よくある質問</h2>
+<p><strong>起動後、ステータスバーに「カーネルを利用できません」と表示される。</strong>
+インストールフォルダーが移動されたか、<code>kernels\libradtran</code> がウイルス対策ソフトに削除されています。設定でパスを確認し、必要なら再インストールしてください。</p>
+<p><strong>実行ボタンがグレーアウトしている。</strong>
+パラメータパネルの下に赤い検証メッセージが表示されています。指示に従って修正してください。よくある原因：目標高度が観測者と同じなのに斜め経路を選んでいる、天頂角の向きと目標の上下関係が矛盾している、スペクトルの開始と終了が同じ。</p>
+<p><strong>計算が失敗し、ログに「Netcdf error … reptran_…_medium」とある。</strong>
+選択した分解能のデータ表がありません。完全版インストーラーには 3 段階すべてが含まれます。縮小版の場合は「粗」を使うかデータを追加してください。</p>
+<p><strong>熱赤外の透過率がすべて 0 になる。</strong>
+0.2.0 より前のバージョンで二流ソルバーを選ぶと発生しました。修正済みで、放射輝度が必要な場合は自動的に DISORT を使います。</p>
+<p><strong>計算が遅い。</strong>
+細分解能＋広い波長域＋32 ストリームが最も遅くなります。まず粗分解能でパラメータを決め、最後に細分解能で図を作成してください。バッチ計算では同時プロセス数を最大にします。</p>
+<p><strong>グラフ右軸の値の意味がわからない。</strong>
+右軸は放射量で、単位はツールバーの「スペクトル密度」（cm⁻¹ あたり、nm あたり、µm あたり）に従います。テーブルと CSV も同じ設定を使います。</p>
+<p><strong>画面が英語で表示される。</strong>
+Windows の表示言語が対応リストにない場合、英語にフォールバックします。「ツール → 設定 → 表示言語」で希望の言語を選び、再起動してください。</p>
+<p><strong>Python で「DLL load failed」が出る。</strong>
+<code>PYTHONPATH</code> は <code>pyqradtran</code> サブフォルダーではなく、インストールフォルダー自体（<code>qradtran_core.dll</code> と <code>Qt6Core.dll</code> がある階層）を指す必要があります。Python は 3.10 64 ビットが必要です。</p>
+<p><strong>自分の libRadtran を使えますか？</strong>
+使えます。設定で uvspec.exe とデータディレクトリを自分のバージョンに向けてください。2.0.x である必要があります。</p>
+<hr />
+<h2 id="13">13. アンインストール</h2>
+<p>「設定 → アプリ」から QRadtran をアンインストールするか、スタートメニューの「QRadtran をアンインストール」を実行します。アンインストールしてもユーザーのプロジェクトファイルと <code>%LOCALAPPDATA%\WaveFront\QRadtran</code> 内の実行記録は削除されません。不要なら手動で削除してください。</p>
+<p>インストール不要版はフォルダーを削除するだけです。</p>
+<hr />
+<h2 id="14">14. ファイルとフォルダー</h2>
+<pre><code>QRadtran\
+├── QRadtran.exe              グラフィカルインターフェース
+├── qradtran-cli.exe          コマンドライン
+├── qradtran_core.dll         コアライブラリ
+├── Qt6*.dll, platforms\, styles\, translations\ …   Qt ランタイム
+├── hdf5.dll, msvcp140.dll, vcruntime140*.dll        HDF5 と VC++ ランタイム
+├── kernels\libradtran\
+│   ├── bin\uvspec.exe        計算カーネル（MinGW ビルド）とそのランタイム
+│   ├── data\                 大気プロファイル、エアロゾル、雲、太陽スペクトル、REPTRAN 表
+│   ├── source\               libRadtran ソースアーカイブ、パッチ、ビルドスクリプト（GPL の要件）
+│   └── VERSION
+├── data\presets\             サンプルシナリオ
+├── pyqradtran\               Python バインディングとサンプル
+├── licenses\                 サードパーティライセンス本文
+└── doc\                      本説明書（8 言語の md と html）
+</code></pre>
+<p>プロジェクトファイル（<code>.json</code>）や出力した CSV / HDF5 / 画像はユーザーが指定した場所に保存されます。</p>
+<hr />
+<h2 id="_6">サポート</h2>
+<p>Wuhan WaveFront Co., Ltd.　　WeChat：angaio</p>
+</main></body></html>

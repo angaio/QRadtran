@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>QRadtran 安装使用说明</title>
+<style>
+ body { font-family: "Microsoft YaHei", "Segoe UI", sans-serif; color:#111620; background:#f6f7f9; margin:0; }
+ main { max-width: 960px; margin: 0 auto; padding: 32px 40px 60px; background:#fff; }
+ h1 { border-bottom: 3px solid #0e58a8; padding-bottom: 8px; }
+ h2 { color:#0e58a8; margin-top: 2.2em; border-bottom: 1px solid #d8dce2; padding-bottom: 4px; }
+ h3 { color:#46505a; }
+ table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+ th, td { border: 1px solid #d8dce2; padding: 6px 10px; text-align: left; vertical-align: top; }
+ th { background: #eef1f5; }
+ code { background:#eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+ pre { background:#111620; color:#f5f7fa; padding: 12px 16px; border-radius: 6px; overflow-x:auto; font-size:13px; }
+ pre code { background: none; color: inherit; padding: 0; }
+ a { color:#0e58a8; }
+ strong { color:#c6282c; }
+</style></head><body><main>
+<h1 id="qradtran">QRadtran 安装使用说明</h1>
+<p><strong>版本</strong> 0.3.0　　<strong>日期</strong> 2026-09-19　　<strong>发布方</strong> Wuhan WaveFront Co., Ltd.</p>
+<p>本说明另有 English / Русский / 日本語 / 한국어 / Français / Deutsch / Español 版本，安装后位于安装目录 <code>doc\</code> 下。</p>
+<p>QRadtran 是面向红外与光电系统工程师的大气透过率与辐射计算软件。它在 Windows 上以图形界面完成斜程与水平路径透过率、路径与天空辐射亮度、目标表观辐射亮度的光谱计算，支持多曲线对比、参数扫描生成查找表（CSV / HDF5）、命令行与 Python 调用。计算内核为开源的 libRadtran，随软件一起安装，无需另行配置。</p>
+<hr />
+<h2 id="_1">目录</h2>
+<ol>
+<li><a href="#1-系统要求">系统要求</a></li>
+<li><a href="#2-安装">安装</a></li>
+<li><a href="#3-首次运行">首次运行</a></li>
+<li><a href="#4-界面总览">界面总览</a></li>
+<li><a href="#5-参数面板详解">参数面板详解</a></li>
+<li><a href="#6-典型操作流程">典型操作流程</a></li>
+<li><a href="#7-参数扫描与查找表">参数扫描与查找表</a></li>
+<li><a href="#8-命令行工具">命令行工具</a></li>
+<li><a href="#9-python-接口">Python 接口</a></li>
+<li><a href="#10-设置">设置</a></li>
+<li><a href="#11-计算原理简述与精度说明">计算原理简述与精度说明</a></li>
+<li><a href="#12-常见问题">常见问题</a></li>
+<li><a href="#13-卸载">卸载</a></li>
+<li><a href="#14-文件与目录">文件与目录</a></li>
+</ol>
+<hr />
+<h2 id="1">1. 系统要求</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>要求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>操作系统</td>
+<td>Windows 10 / 11，64 位</td>
+</tr>
+<tr>
+<td>处理器</td>
+<td>4 核以上。计算内核可多进程并行，核数越多批量计算越快</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>8 GB 以上</td>
+</tr>
+<tr>
+<td>磁盘</td>
+<td>安装后约 1.2 GB（含全部三档分辨率的光谱参数表）；建议安装到固态硬盘，细分辨率计算读盘量大</td>
+</tr>
+<tr>
+<td>显示</td>
+<td>1600 × 900 以上分辨率</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>无需安装 Python、MSYS2 或 WSL；VC++ 运行库已内置</td>
+</tr>
+</tbody>
+</table>
+<p>Python 接口是可选功能，需要本机自带 Python 3.10 64 位及 numpy。</p>
+<hr />
+<h2 id="2">2. 安装</h2>
+<ol>
+<li>双击 <code>QRadtran-0.3.0-Setup-x64.exe</code>。</li>
+<li>选择安装程序语言（简体中文、English、Русский、日本語、한국어、Français、Deutsch、Español）。安装程序会把所选语言记为软件的界面语言，之后可在「工具 → 设置」中更改。</li>
+<li>阅读第三方组件许可说明，点击「下一步」。</li>
+<li>选择安装目录，默认 <code>C:\Program Files\QRadtran</code>。目录路径可以含中文，但不建议放在网络盘上。</li>
+<li>附加任务：</li>
+<li><strong>创建桌面快捷方式</strong>：默认勾选。</li>
+<li><strong>将安装目录加入 PATH</strong>：默认不勾选。勾选后可在任意命令行窗口直接输入 <code>qradtran-cli</code>。</li>
+<li>点击「安装」，等待复制文件（约 1 至 3 分钟）。</li>
+<li>完成页可直接运行软件或打开本说明。</li>
+</ol>
+<p>安装程序需要管理员权限。如果只想为当前用户安装，可在权限提示中选择「仅为我安装」，此时默认目录变为 <code>%LOCALAPPDATA%\Programs\QRadtran</code>。</p>
+<h3 id="_2">免安装方式</h3>
+<p>也可以不用安装程序：把发布目录 <code>QRadtran\</code> 整个复制到任意位置，直接运行其中的 <code>QRadtran.exe</code>。所有依赖都在目录内，删除目录即完成卸载。</p>
+<hr />
+<h2 id="3">3. 首次运行</h2>
+<p>启动后先看窗口右下角状态栏：</p>
+<pre><code>内核 libradtran 2.0.6 | 并发 7
+</code></pre>
+<p>出现这一行表示计算内核已就绪，「并发」是同时运行的内核进程数。如果显示「内核不可用」，请打开「工具 → 设置」检查内核路径，见第 10 节。</p>
+<p><strong>界面语言</strong>：软件默认跟随 Windows 显示语言，支持简体中文、英文、俄文、日文、韩文、法文、德文、西班牙文。在「工具 → 设置 → 界面语言」中选择后重新启动生效；也可用命令行参数临时指定，如 <code>QRadtran.exe --lang en</code>。</p>
+<p>建议第一次运行从预设场景开始：</p>
+<ol>
+<li>菜单「文件 → 加载预设场景…」，选择 <code>mls_ground_to_air_3_5um.json</code>（中纬度夏季大气，地面看向 10 km 高度的目标，3–5 µm）。</li>
+<li>点击工具栏「运行」或按 F5。</li>
+<li>底部「任务与日志」出现一行任务，进度条走完后中央区域显示曲线：蓝色为透过率（左轴），暖色为辐射量（右轴）。整个过程约 7 秒。</li>
+</ol>
+<hr />
+<h2 id="4">4. 界面总览</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ 文件  计算  视图  工具  帮助                                          │
+│ [新建][打开][保存] │ [▶运行][■停止][参数扫描] │ [导出图片][复位缩放] │ 横轴 谱密度 │
+├──────────────┬───────────────────────────────────────┬──────────────┤
+│  参数面板     │  光谱曲线 ／ 结果表格                    │  曲线管理     │
+│  ▸ 大气      │                                       │  ☑ 透过率     │
+│  ▸ 几何      │        （双轴光谱图）                   │  ☑ 路径辐射   │
+│  ▸ 气溶胶与云 │                                       │  颜色 / 显隐  │
+│  ▸ 地表      │                                       │              │
+│  ▸ 光谱      │                                       │              │
+│  ▸ 输出项     │                                       │              │
+│  [运行计算]   │  x = 4.35 µm  透过率 0.812 …           │              │
+├──────────────┴───────────────────────────────────────┴──────────────┤
+│  任务与日志：任务列表（状态 / 进度 / 耗时） │ 日志（内核调用与警告）      │
+├─────────────────────────────────────────────────────────────────────┤
+│ 状态栏：光标读数                                内核 libradtran 2.0.6 │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>三个停靠面板都可以拖动、关闭和重新排列；关闭后在「视图」菜单或拖动边缘恢复。</p>
+<h3 id="_3">工具栏</h3>
+<table>
+<thead>
+<tr>
+<th>按钮</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>新建 / 打开 / 保存工程</td>
+<td>工程是一个 JSON 文件，保存全部参数与已计算的结果</td>
+</tr>
+<tr>
+<td>加载预设场景</td>
+<td>三个随软件提供的示例场景，名称按界面语言显示</td>
+</tr>
+<tr>
+<td>运行（F5）</td>
+<td>用当前参数计算，结果追加到曲线区，不覆盖之前的结果</td>
+</tr>
+<tr>
+<td>停止全部</td>
+<td>取消所有正在运行的任务</td>
+</tr>
+<tr>
+<td>参数扫描 / LUT</td>
+<td>打开批量计算对话框，见第 7 节</td>
+</tr>
+<tr>
+<td>导出图片</td>
+<td>把当前曲线图保存为 PNG / PDF / JPEG</td>
+</tr>
+<tr>
+<td>复位缩放（Home）</td>
+<td>曲线图恢复到全范围</td>
+</tr>
+<tr>
+<td>横轴</td>
+<td>曲线横轴单位：µm / nm / cm⁻¹，切换即时生效</td>
+</tr>
+<tr>
+<td>谱密度</td>
+<td>辐射量的谱密度单位：每 µm / 每 nm / 每 cm⁻¹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_4">曲线图操作</h3>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>鼠标滚轮</td>
+<td>以光标为中心缩放</td>
+</tr>
+<tr>
+<td>拖动</td>
+<td>平移</td>
+</tr>
+<tr>
+<td>双击</td>
+<td>复位</td>
+</tr>
+<tr>
+<td>移动鼠标</td>
+<td>底部与状态栏显示光标处每条曲线的数值</td>
+</tr>
+<tr>
+<td>右侧曲线面板勾选框</td>
+<td>显示 / 隐藏某条曲线</td>
+</tr>
+<tr>
+<td>双击颜色块</td>
+<td>修改曲线颜色</td>
+</tr>
+<tr>
+<td>右键结果名</td>
+<td>导出该结果为 CSV，或移除</td>
+</tr>
+</tbody>
+</table>
+<p>透过率画在左轴（0 至 1），辐射亮度与辐照度画在右轴，两者可以叠加显示。</p>
+<hr />
+<h2 id="5">5. 参数面板详解</h2>
+<h3 id="51">5.1 大气</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标准大气</td>
+<td>热带、中纬度夏、中纬度冬、亚北极夏、亚北极冬、美国标准 1976，即 AFGL 六种标准大气；或「自定义廓线」</td>
+</tr>
+<tr>
+<td>导入廓线 (CSV)</td>
+<td>导入自己的温压湿探空数据，见下</td>
+</tr>
+<tr>
+<td>水汽柱含量</td>
+<td>勾选后把整层可降水量缩放到指定毫米数，不勾选则用标准大气自带值</td>
+</tr>
+<tr>
+<td>臭氧柱含量</td>
+<td>同上，单位 DU</td>
+</tr>
+<tr>
+<td>CO₂ 混合比</td>
+<td>ppm，默认 420</td>
+</tr>
+</tbody>
+</table>
+<p><strong>自定义廓线文件格式</strong>：CSV 或空白分隔的文本，第一行为列名。必需列：高度、气压、温度，以及一个湿度列。识别的列名（不区分大小写）：</p>
+<table>
+<thead>
+<tr>
+<th>量</th>
+<th>可用列名</th>
+<th>单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>高度</td>
+<td>z, alt, altitude, height</td>
+<td>km（列名写 <code>z_m</code> 则按米）</td>
+</tr>
+<tr>
+<td>气压</td>
+<td>p, pres, pressure</td>
+<td>hPa（<code>p_pa</code> 则按 Pa）</td>
+</tr>
+<tr>
+<td>温度</td>
+<td>t, temp, temperature</td>
+<td>K（<code>t_c</code> 则按 ℃）</td>
+</tr>
+<tr>
+<td>湿度（三选一）</td>
+<td>rh；q；h2o / h2o_vmr</td>
+<td>相对湿度 %；比湿 g/kg；体积混合比 ppmv</td>
+</tr>
+<tr>
+<td>臭氧（可选）</td>
+<td>o3, o3_vmr</td>
+<td>ppmv</td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<pre><code>z_km,p_hpa,t_k,rh
+0.0,1013.0,295.0,70
+1.0,900.0,289.0,65
+2.0,795.0,283.0,55
+5.0,540.0,262.0,40
+10.0,265.0,223.0,20
+</code></pre>
+<p>导入后廓线之上的高度由所选标准大气补全。</p>
+<h3 id="52">5.2 几何</h3>
+<table>
+<thead>
+<tr>
+<th>路径类型</th>
+<th>含义</th>
+<th>相关参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>斜程（观测者→目标）</td>
+<td>观测者与目标高度不同</td>
+<td>观测者高度、目标高度、观测天顶角</td>
+</tr>
+<tr>
+<td>水平路径</td>
+<td>观测者与目标同高度</td>
+<td>观测者高度、水平路径长度</td>
+</tr>
+<tr>
+<td>整层垂直</td>
+<td>地表到大气顶</td>
+<td>无</td>
+</tr>
+<tr>
+<td>仅天空辐射</td>
+<td>不设目标，看天空某方向的辐射亮度</td>
+<td>观测者高度、观测天顶角、方位角</td>
+</tr>
+</tbody>
+</table>
+<p>角度约定：</p>
+<ul>
+<li><strong>观测天顶角</strong>：0° 为正上方，90° 水平，180° 正下方。目标在观测者上方时须小于 90°，反之须大于 90°，否则面板会提示错误。</li>
+<li><strong>观测方位角</strong>、<strong>太阳方位角</strong>：北为 0°，顺时针。</li>
+<li><strong>太阳天顶角</strong>：只影响太阳波段的辐射量，对透过率无影响。</li>
+<li><strong>地表海拔</strong>：整个大气廓线的底部高度，观测者与目标高度均为海拔。</li>
+</ul>
+<p>天顶角在 85° 至 95° 之间时软件改用分层消光积分处理近水平路径，并给出精度警告。</p>
+<h3 id="53">5.3 气溶胶与云</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>气溶胶类型</td>
+<td>无、乡村、城市、海洋、对流层（Shettle 模型），或 OPAC 组分</td>
+</tr>
+<tr>
+<td>能见度</td>
+<td>地面水平能见度，km，决定边界层气溶胶浓度</td>
+</tr>
+<tr>
+<td>季节</td>
+<td>春夏 / 秋冬廓线</td>
+</tr>
+<tr>
+<td>平流层气溶胶</td>
+<td>背景 / 中等火山 / 高火山 / 极端火山</td>
+</tr>
+<tr>
+<td>OPAC 混合名称</td>
+<td>选 OPAC 时填写，如 continental_average、maritime_clean、urban、desert</td>
+</tr>
+<tr>
+<td>单层云</td>
+<td>水云或冰云，给云底、云顶、含水量、有效半径</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54">5.4 地表</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>地表反照率</td>
+<td>太阳波段用，0 至 1</td>
+</tr>
+<tr>
+<td>地表温度</td>
+<td>热红外波段的地表发射温度</td>
+</tr>
+<tr>
+<td>地表发射率</td>
+<td>热红外波段用，0 至 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55">5.5 光谱</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>光谱单位</td>
+<td>µm / nm / cm⁻¹。切换时起止值自动换算</td>
+</tr>
+<tr>
+<td>起始 / 终止</td>
+<td>光谱范围。软件自动把太阳波段（≤ 5 µm）和热红外波段（≥ 2.5 µm）分别交给内核计算再拼接</td>
+</tr>
+<tr>
+<td>输出步长</td>
+<td>输出网格间隔；填 0 表示直接用内核的代表波长网格</td>
+</tr>
+<tr>
+<td>带模式分辨率</td>
+<td>粗 15 cm⁻¹ / 中 5 cm⁻¹ / 细 1 cm⁻¹ / LOWTRAN 20 cm⁻¹。越细越准也越慢</td>
+</tr>
+<tr>
+<td>求解器</td>
+<td>DISORT（多次散射，默认）或两流近似。需要辐射亮度时软件会自动改用 DISORT</td>
+</tr>
+<tr>
+<td>DISORT 流数</td>
+<td>默认 16；散射强的场景（厚气溶胶、云）可增到 32</td>
+</tr>
+</tbody>
+</table>
+<p>耗时参考（4 核办公机）：3–5 µm 地对空，粗分辨率约 7 秒，中分辨率约 30 秒；8–12 µm 水平 1 km 约 2 秒。</p>
+<h3 id="56">5.6 输出项</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>含义</th>
+<th>单位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>路径透过率</td>
+<td>观测者到目标的光谱透过率</td>
+<td>无量纲</td>
+</tr>
+<tr>
+<td>路径辐射亮度</td>
+<td>路径上大气自身发射与散射进入视线的辐射亮度</td>
+<td>W/(m²·sr·cm⁻¹)，可切换</td>
+</tr>
+<tr>
+<td>天空辐射亮度</td>
+<td>观测者处沿视线看到的天空辐射亮度</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>直射辐照度 / 下行漫射辐照度 / 上行辐照度</td>
+<td>观测者高度处的辐照度</td>
+<td>W/(m²·cm⁻¹)</td>
+</tr>
+<tr>
+<td>目标表观辐射亮度</td>
+<td>给定目标温度与发射率，经大气衰减并加上路径辐射后观测者看到的辐射亮度；同时输出目标处的入射辐射亮度</td>
+<td>W/(m²·sr·cm⁻¹)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6">6. 典型操作流程</h2>
+<h3 id="61">6.1 单次计算与对比</h3>
+<ol>
+<li>设置参数，点击「运行」。</li>
+<li>修改一两个参数（例如能见度从 23 km 改为 5 km），再次运行。新结果以不同颜色追加到同一张图，图例中带场景名。</li>
+<li>在右侧曲线面板勾选 / 取消要对比的曲线。</li>
+<li>切换到「结果表格」标签查看数值；横轴与谱密度单位随工具栏切换。</li>
+</ol>
+<h3 id="62">6.2 保存与恢复</h3>
+<p>「文件 → 保存工程」把当前参数和全部结果存为一个 JSON 文件。下次打开该文件，曲线会直接恢复，无需重算。</p>
+<h3 id="63">6.3 导出</h3>
+<ul>
+<li>曲线图：「文件 → 导出图片」或工具栏按钮，PNG / PDF / JPEG。</li>
+<li>数据：右侧曲线面板中右键某个结果 → 「导出该结果为 CSV」。CSV 的横轴单位和谱密度单位跟随工具栏当前设置，文件头注明单位。</li>
+</ul>
+<h3 id="64">6.4 目标探测场景</h3>
+<p>要得到目标在探测器处的表观辐射亮度：</p>
+<ol>
+<li>几何选「斜程」，填观测者与目标高度、天顶角。</li>
+<li>输出项勾选「目标表观辐射亮度」，填目标温度与发射率。</li>
+<li>运行后得到四条曲线：透过率、路径辐射亮度、目标表观辐射亮度、目标处入射辐射亮度。</li>
+<li>把目标表观辐射亮度减去同几何下「仅天空辐射」得到的背景，即为目标与背景的辐射对比度。</li>
+</ol>
+<hr />
+<h2 id="7">7. 参数扫描与查找表</h2>
+<p>「计算 → 参数扫描 / LUT…」以当前参数面板为基准，对若干参数取笛卡尔积逐一计算，输出查找表。</p>
+<h3 id="_5">对话框各项</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>扫描维度</td>
+<td>每行一个参数。参数用 JSON 指针写，下拉框列出常用项；取值可写列表 <code>1, 2, 5, 10</code> 或范围 <code>0:10:2</code>（起:止:步长）；字符串型参数直接写名字，如 <code>Rural, Urban</code></td>
+</tr>
+<tr>
+<td>列名</td>
+<td>输出文件里该维度的坐标名，默认取参数名</td>
+</tr>
+<tr>
+<td>输出量</td>
+<td>不勾选则输出场景中全部量</td>
+</tr>
+<tr>
+<td>带平均</td>
+<td>可选，按 µm 波段计算带平均值与带积分，一并写入</td>
+</tr>
+<tr>
+<td>输出文件</td>
+<td>扩展名决定格式：<code>.h5</code> 为 HDF5，<code>.csv</code> 为长表</td>
+</tr>
+<tr>
+<td>断点续跑</td>
+<td>中断后再次运行时跳过已完成的组合</td>
+</tr>
+</tbody>
+</table>
+<p>对话框会显示组合总数和每个组合需要的内核运行次数。运行期间可取消，已完成部分保留。</p>
+<h3 id="hdf5">HDF5 文件布局</h3>
+<pre><code>/&lt;量名&gt;                       [维度1, …, 维度N, 光谱]     数据，单位在属性 units
+/bands/&lt;量名&gt;_average         [维度1, …, 维度N, 波段]     带平均
+/bands/&lt;量名&gt;_integral        [维度1, …, 维度N, 波段]     带积分
+/coords/wavenumber            [光谱]                     cm⁻¹
+/coords/wavelength_um         [光谱]                     µm
+/coords/&lt;列名&gt;                [取值数]                   各维度坐标（数值或字符串）
+/coords/band                  [波段]                     波段名
+/filled                       [维度1, …, 维度N]          1 = 该组合已计算
+根属性：kernel、kernel_version、created_utc、base_scenario（基准场景 JSON）、plan（扫描计划 JSON）
+</code></pre>
+<p>在 Python 中读取（需要 h5py）：</p>
+<pre><code class="language-python">import h5py
+with h5py.File(&quot;lut.h5&quot;) as f:
+    T = f[&quot;Transmittance&quot;][...]            # 形状 [维度1, …, 光谱]
+    nu = f[&quot;coords/wavenumber&quot;][...]
+    tgt = f[&quot;coords/target_km&quot;][...]
+</code></pre>
+<p>安装目录 <code>pyqradtran\read_lut_h5.py</code> 是一个现成的查看脚本。</p>
+<h3 id="csv">CSV 长表</h3>
+<p>每行一个 (维度值…, 波数, 量名, 值)；带平均另存为 <code>&lt;文件名&gt;.bands.csv</code>。适合 Excel 透视或 pandas 读取。</p>
+<hr />
+<h2 id="8">8. 命令行工具</h2>
+<p><code>qradtran-cli.exe</code> 在安装目录下；勾选了「加入 PATH」的话可在任意位置使用。</p>
+<pre><code>qradtran-cli example --out case.json         生成一个模板场景文件
+qradtran-cli validate case.json              检查参数
+qradtran-cli plan case.json                  列出将执行的内核运行，不计算
+qradtran-cli run case.json --out out.csv     计算并输出 CSV（--unit um|nm|cm-1  --density cm-1|nm|um）
+qradtran-cli run case.json --out out.json    输出 JSON（含元数据）
+qradtran-cli batch-example --out plan.json   生成参数扫描模板
+qradtran-cli batch plan.json --out lut.h5    批量计算（.h5 或 .csv；--resume 断点续跑）
+qradtran-cli kernel-info                     显示内核状态与可用分辨率
+</code></pre>
+<p>退出码：0 成功，1 参数错误，2 校验失败，3 内核失败。场景文件与 GUI 保存的工程文件通用。</p>
+<hr />
+<h2 id="9-python">9. Python 接口</h2>
+<p>安装目录下的 <code>pyqradtran\</code> 是一个 Python 包，针对 Python 3.10 64 位构建。使用前把安装目录加入 <code>PYTHONPATH</code>：</p>
+<pre><code class="language-bat">set PYTHONPATH=C:\Program Files\QRadtran
+python
+</code></pre>
+<pre><code class="language-python">import pyqradtran as qr
+
+s = qr.Scenario.standard(&quot;MidlatitudeSummer&quot;)
+s.geometry.mode = &quot;SlantPath&quot;
+s.geometry.observer_alt_km = 0.0
+s.geometry.target_alt_km = 10.0
+s.geometry.view_zenith_deg = 30.0
+s.aerosol.type = &quot;Rural&quot;
+s.aerosol.visibility_km = 23.0
+s.spectral.set_range(3, 5, unit=&quot;Micrometer&quot;, step=0.01, resolution=&quot;Coarse&quot;)
+s.outputs.transmittance = True
+s.outputs.path_radiance = True
+
+r = qr.run(s)
+nu = r.wavenumber                   # numpy 数组，cm⁻¹
+T = r[&quot;Transmittance&quot;]
+L = r.series(&quot;PathRadiance&quot;, per=&quot;Micrometer&quot;)     # 换算为每 µm
+print(r.band_average(&quot;Transmittance&quot;, 3.0, 5.0))  # {'average':…, 'integral':…}
+r.to_csv(&quot;out.csv&quot;, unit=&quot;Micrometer&quot;)
+
+# 参数扫描
+plan = qr.BatchPlan()
+plan.base = s
+plan.add_dimension(&quot;/geometry/target_alt_km&quot;, [1, 2, 5, 10], &quot;tgt_km&quot;)
+plan.add_band(&quot;MWIR&quot;, 3.0, 5.0)
+qr.batch(plan, &quot;lut.h5&quot;)
+</code></pre>
+<p>完整示例见 <code>pyqradtran\python_quickstart.py</code>。绑定与图形界面共用同一核心库与内核，结果完全一致。</p>
+<hr />
+<h2 id="10">10. 设置</h2>
+<p>「工具 → 设置」：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uvspec.exe / libRadtran 数据目录</td>
+<td>内核位置，默认指向安装目录下的 <code>kernels\libradtran</code>。一般不需要改</td>
+</tr>
+<tr>
+<td>检测内核</td>
+<td>显示内核版本与已安装的分辨率档位</td>
+</tr>
+<tr>
+<td>最大并发内核进程</td>
+<td>0 为自动（CPU 核数减 1）。内存紧张时调小</td>
+</tr>
+<tr>
+<td>单次内核超时</td>
+<td>秒。细分辨率、宽波段、高流数的计算可能需要调大</td>
+</tr>
+<tr>
+<td>失败时保留工作目录</td>
+<td>内核失败时保留输入输出文件供诊断，位置在日志中给出</td>
+</tr>
+<tr>
+<td>成功时也保留工作目录</td>
+<td>诊断用，平时关闭</td>
+</tr>
+<tr>
+<td>界面语言</td>
+<td>跟随系统，或固定为八种语言之一；重启后生效</td>
+</tr>
+</tbody>
+</table>
+<p>工作目录位于 <code>%LOCALAPPDATA%\WaveFront\QRadtran\runs\</code>。</p>
+<hr />
+<h2 id="11">11. 计算原理简述与精度说明</h2>
+<ul>
+<li><strong>内核</strong>：libRadtran 2.0.6 的 uvspec，以独立进程调用；分子吸收用 REPTRAN 代表波长带模式（基于 HITRAN 2004 及后续），多次散射用 DISORT。</li>
+<li><strong>斜程透过率</strong>：太阳波段由两个高度层的直射辐照度之比得到；热红外波段由地表温度扰动前后两次运行的辐射亮度差之比得到。</li>
+<li><strong>水平与近水平路径</strong>：由所在层的垂直透过率导出消光系数，再沿球面几何路径积分。</li>
+<li><strong>路径辐射亮度</strong>：观测者处辐射亮度减去目标处辐射亮度乘以透过率。</li>
+<li><strong>精度</strong>：与 MODTRAN4 在长波与中波大气窗区对标，8 个算例中 6 个的窗区带平均透过率偏差在 0.04 以内，最好者 0.003；强吸收带内两代谱学数据存在系统差异。详见随软件文档《验证报告》。</li>
+<li><strong>REPTRAN 三档</strong>：细 1 cm⁻¹ 与 MODTRAN 的 1 cm⁻¹ 带模式同级；粗 15 cm⁻¹ 适合快速估算。</li>
+</ul>
+<hr />
+<h2 id="12">12. 常见问题</h2>
+<p><strong>启动后状态栏显示「内核不可用」。</strong>
+安装目录被移动或 <code>kernels\libradtran</code> 被杀毒软件误删。打开设置检查路径；必要时重新安装。</p>
+<p><strong>运行按钮是灰色的。</strong>
+参数面板下方有红色校验提示，按提示修正。常见原因：目标高度与观测者相同却选了斜程；天顶角方向与目标上下关系矛盾；光谱起止相同。</p>
+<p><strong>计算失败，日志里有「Netcdf error … reptran_…_medium」。</strong>
+所选分辨率的数据表缺失。完整安装包含全部三档；若使用精简包，请改用「粗」分辨率或补装数据。</p>
+<p><strong>热红外透过率全是 0。</strong>
+0.2.0 之前的版本在选择两流求解器时会出现，已修复：需要辐射亮度时自动改用 DISORT。</p>
+<p><strong>计算很慢。</strong>
+细分辨率加宽波段加 32 流最慢。先用粗分辨率确定参数，最后再用细分辨率出图；批量计算时开足并发进程。</p>
+<p><strong>曲线图右轴数值看不懂。</strong>
+右轴是辐射量，单位随工具栏「谱密度」切换：每 cm⁻¹、每 nm 或每 µm。表格与 CSV 用同一设置。</p>
+<p><strong>Python 报「DLL load failed」。</strong>
+<code>PYTHONPATH</code> 须指向安装目录本身（包含 <code>qradtran_core.dll</code> 和 <code>Qt6Core.dll</code> 的那一层），不是 <code>pyqradtran</code> 子目录；Python 须为 3.10 64 位。</p>
+<p><strong>界面显示成了英文。</strong>
+Windows 显示语言不在支持列表内时软件退回英文。到「工具 → 设置 → 界面语言」选择需要的语言并重启。</p>
+<p><strong>能否用自己的 libRadtran？</strong>
+可以。在设置里把 uvspec.exe 与数据目录指向自己的版本，需为 2.0.x。</p>
+<hr />
+<h2 id="13">13. 卸载</h2>
+<p>「设置 → 应用」中卸载 QRadtran，或运行开始菜单里的「卸载 QRadtran」。卸载不删除用户的工程文件与 <code>%LOCALAPPDATA%\WaveFront\QRadtran</code> 下的运行记录，如需清理请手动删除。</p>
+<p>免安装方式直接删除目录即可。</p>
+<hr />
+<h2 id="14">14. 文件与目录</h2>
+<pre><code>QRadtran\
+├── QRadtran.exe              图形界面
+├── qradtran-cli.exe          命令行
+├── qradtran_core.dll         核心库
+├── Qt6*.dll, platforms\, styles\, translations\ …   Qt 运行库
+├── hdf5.dll, msvcp140.dll, vcruntime140*.dll        HDF5 与 VC++ 运行库
+├── kernels\libradtran\
+│   ├── bin\uvspec.exe        计算内核（MinGW 编译）及其运行库
+│   ├── data\                 大气廓线、气溶胶、云、太阳谱与 REPTRAN 光谱表
+│   ├── source\               libRadtran 源码包、补丁与构建脚本（GPL 要求）
+│   └── VERSION
+├── data\presets\             示例场景
+├── pyqradtran\               Python 绑定与示例
+├── licenses\                 第三方许可证文本
+└── doc\                      本说明（八种语言的 md 与 html）
+</code></pre>
+<p>工程文件（<code>.json</code>）、导出的 CSV / HDF5 / 图片保存在用户指定的位置。</p>
+<hr />
+<h2 id="_6">技术支持</h2>
+<p>Wuhan WaveFront Co., Ltd.　　微信：angaio</p>
+</main></body></html>

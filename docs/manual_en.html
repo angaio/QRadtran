@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>QRadtran Installation and User Manual</title>
+<style>
+ body { font-family: "Segoe UI", Arial, sans-serif; color:#111620; background:#f6f7f9; margin:0; }
+ main { max-width: 960px; margin: 0 auto; padding: 32px 40px 60px; background:#fff; }
+ h1 { border-bottom: 3px solid #0e58a8; padding-bottom: 8px; }
+ h2 { color:#0e58a8; margin-top: 2.2em; border-bottom: 1px solid #d8dce2; padding-bottom: 4px; }
+ h3 { color:#46505a; }
+ table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+ th, td { border: 1px solid #d8dce2; padding: 6px 10px; text-align: left; vertical-align: top; }
+ th { background: #eef1f5; }
+ code { background:#eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+ pre { background:#111620; color:#f5f7fa; padding: 12px 16px; border-radius: 6px; overflow-x:auto; font-size:13px; }
+ pre code { background: none; color: inherit; padding: 0; }
+ a { color:#0e58a8; }
+ strong { color:#c6282c; }
+</style></head><body><main>
+<h1 id="qradtran-installation-and-user-manual">QRadtran Installation and User Manual</h1>
+<p><strong>Version</strong> 0.3.0　　<strong>Date</strong> 2026-09-19　　<strong>Publisher</strong> Wuhan WaveFront Co., Ltd.</p>
+<p>This manual is also available in 简体中文, Русский, 日本語, 한국어, Français, Deutsch and Español; after installation all versions are in the <code>doc\</code> folder of the installation directory.</p>
+<p>QRadtran is atmospheric transmittance and radiance software for infrared and electro-optical system engineers. On Windows it computes, through a graphical interface, spectral transmittance along slant and horizontal paths, path and sky radiance, and the apparent radiance of a target. It supports multi-curve comparison, parameter sweeps that produce look-up tables (CSV / HDF5), a command-line tool and a Python interface. The computation kernel is the open-source libRadtran, installed together with the software; no separate configuration is needed.</p>
+<hr />
+<h2 id="contents">Contents</h2>
+<ol>
+<li><a href="#1-system-requirements">System requirements</a></li>
+<li><a href="#2-installation">Installation</a></li>
+<li><a href="#3-first-run">First run</a></li>
+<li><a href="#4-interface-overview">Interface overview</a></li>
+<li><a href="#5-parameter-panel-in-detail">Parameter panel in detail</a></li>
+<li><a href="#6-typical-workflows">Typical workflows</a></li>
+<li><a href="#7-parameter-sweeps-and-look-up-tables">Parameter sweeps and look-up tables</a></li>
+<li><a href="#8-command-line-tool">Command-line tool</a></li>
+<li><a href="#9-python-interface">Python interface</a></li>
+<li><a href="#10-settings">Settings</a></li>
+<li><a href="#11-computation-method-and-accuracy">Computation method and accuracy</a></li>
+<li><a href="#12-frequently-asked-questions">Frequently asked questions</a></li>
+<li><a href="#13-uninstalling">Uninstalling</a></li>
+<li><a href="#14-files-and-folders">Files and folders</a></li>
+</ol>
+<hr />
+<h2 id="1-system-requirements">1. System requirements</h2>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating system</td>
+<td>Windows 10 / 11, 64-bit</td>
+</tr>
+<tr>
+<td>Processor</td>
+<td>4 cores or more. The kernel runs several processes in parallel; more cores make batch calculations faster</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>8 GB or more</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td>About 1.2 GB after installation (includes the spectral tables for all three resolutions). An SSD is recommended; fine-resolution runs read a lot of data</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>1600 × 900 or larger</td>
+</tr>
+<tr>
+<td>Other</td>
+<td>No Python, MSYS2 or WSL required; the VC++ runtime is included</td>
+</tr>
+</tbody>
+</table>
+<p>The Python interface is optional and requires a system Python 3.10 64-bit with numpy.</p>
+<hr />
+<h2 id="2-installation">2. Installation</h2>
+<ol>
+<li>Double-click <code>QRadtran-0.3.0-Setup-x64.exe</code>.</li>
+<li>Choose the installer language (简体中文, English, Русский, 日本語, 한국어, Français, Deutsch, Español). The installer records the chosen language as the interface language of the software; it can be changed later under Tools → Settings.</li>
+<li>Read the third-party licence notes and click Next.</li>
+<li>Choose the installation folder, by default <code>C:\Program Files\QRadtran</code>. The path may contain non-ASCII characters, but a network drive is not recommended.</li>
+<li>Additional tasks:</li>
+<li><strong>Create a desktop shortcut</strong>: checked by default.</li>
+<li><strong>Add the install folder to PATH</strong>: unchecked by default. When checked, <code>qradtran-cli</code> can be typed in any command prompt.</li>
+<li>Click Install and wait for the files to be copied (about 1 to 3 minutes).</li>
+<li>The final page can launch the software or open this manual.</li>
+</ol>
+<p>The installer requires administrator rights. To install for the current user only, choose "Install for me only" in the privilege prompt; the default folder then becomes <code>%LOCALAPPDATA%\Programs\QRadtran</code>.</p>
+<h3 id="portable-use">Portable use</h3>
+<p>The installer is optional: copy the whole release folder <code>QRadtran\</code> anywhere and run <code>QRadtran.exe</code> from it. All dependencies are inside the folder; deleting the folder uninstalls the software.</p>
+<hr />
+<h2 id="3-first-run">3. First run</h2>
+<p>After start-up look at the status bar in the lower right corner of the window:</p>
+<pre><code>Kernel libradtran 2.0.6 | 7 processes
+</code></pre>
+<p>This line means the computation kernel is ready; "processes" is the number of kernel processes that run at the same time. If it says "Kernel unavailable", open Tools → Settings and check the kernel path, see section 10.</p>
+<p><strong>Interface language</strong>: by default the software follows the Windows display language and supports Simplified Chinese, English, Russian, Japanese, Korean, French, German and Spanish. Choose a language under Tools → Settings → Interface language and restart; the language can also be forced on the command line, for example <code>QRadtran.exe --lang en</code>.</p>
+<p>For the first run start from a preset scenario:</p>
+<ol>
+<li>Menu File → Load preset scenario…, choose <code>mls_ground_to_air_3_5um.json</code> (mid-latitude summer atmosphere, ground looking at a target at 10 km altitude, 3–5 µm).</li>
+<li>Click Run on the toolbar or press F5.</li>
+<li>A job appears in the Jobs and log panel at the bottom; when the progress bar completes, the curves appear in the centre: blue is transmittance (left axis), warm colours are radiometric quantities (right axis). The whole run takes about 7 seconds.</li>
+</ol>
+<hr />
+<h2 id="4-interface-overview">4. Interface overview</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ File  Calculate  View  Tools  Help                                  │
+│ [New][Open][Save] │ [▶Run][■Stop][Sweep] │ [Export image][Reset zoom] │ X axis  Density │
+├──────────────┬───────────────────────────────────────┬──────────────┤
+│  Parameters  │  Spectra / Results table              │  Curves      │
+│  ▸ Atmosphere│                                       │  ☑ Transmitt.│
+│  ▸ Geometry  │        (dual-axis spectral plot)      │  ☑ Path rad. │
+│  ▸ Aerosol   │                                       │  colour/show │
+│  ▸ Surface   │                                       │              │
+│  ▸ Spectral  │                                       │              │
+│  ▸ Outputs   │                                       │              │
+│  [Run]       │  x = 4.35 µm  Transmittance 0.812 …   │              │
+├──────────────┴───────────────────────────────────────┴──────────────┤
+│  Jobs and log: job list (status / progress / time) │ log (kernel calls, warnings) │
+├─────────────────────────────────────────────────────────────────────┤
+│ Status bar: cursor read-out                     Kernel libradtran 2.0.6 │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>The three dock panels can be dragged, closed and rearranged; a closed panel is restored from the View menu or by dragging the edge.</p>
+<h3 id="toolbar">Toolbar</h3>
+<table>
+<thead>
+<tr>
+<th>Button</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New / Open / Save project</td>
+<td>A project is one JSON file holding all parameters and the computed results</td>
+</tr>
+<tr>
+<td>Load preset scenario</td>
+<td>Three example scenarios shipped with the software; their names follow the interface language</td>
+</tr>
+<tr>
+<td>Run (F5)</td>
+<td>Computes with the current parameters; the result is added to the plot without replacing earlier results</td>
+</tr>
+<tr>
+<td>Stop all</td>
+<td>Cancels every running job</td>
+</tr>
+<tr>
+<td>Parameter sweep / LUT</td>
+<td>Opens the batch dialog, see section 7</td>
+</tr>
+<tr>
+<td>Export image</td>
+<td>Saves the current plot as PNG / PDF / JPEG</td>
+</tr>
+<tr>
+<td>Reset zoom (Home)</td>
+<td>Restores the full range of the plot</td>
+</tr>
+<tr>
+<td>X axis</td>
+<td>Unit of the horizontal axis: µm / nm / cm⁻¹; takes effect immediately</td>
+</tr>
+<tr>
+<td>Spectral density</td>
+<td>Spectral density unit of radiometric quantities: per µm / per nm / per cm⁻¹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plot-interaction">Plot interaction</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mouse wheel</td>
+<td>Zoom around the cursor</td>
+</tr>
+<tr>
+<td>Drag</td>
+<td>Pan</td>
+</tr>
+<tr>
+<td>Double-click</td>
+<td>Reset</td>
+</tr>
+<tr>
+<td>Move the mouse</td>
+<td>The bottom line and the status bar show the value of every curve at the cursor</td>
+</tr>
+<tr>
+<td>Check box in the Curves panel</td>
+<td>Show / hide a curve</td>
+</tr>
+<tr>
+<td>Double-click the colour swatch</td>
+<td>Change the curve colour</td>
+</tr>
+<tr>
+<td>Right-click a result name</td>
+<td>Export that result as CSV, or remove it</td>
+</tr>
+</tbody>
+</table>
+<p>Transmittance is drawn on the left axis (0 to 1); radiance and irradiance are drawn on the right axis, so both can be overlaid.</p>
+<hr />
+<h2 id="5-parameter-panel-in-detail">5. Parameter panel in detail</h2>
+<h3 id="51-atmosphere">5.1 Atmosphere</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standard atmosphere</td>
+<td>Tropical, mid-latitude summer, mid-latitude winter, sub-arctic summer, sub-arctic winter, US Standard 1976 (the six AFGL atmospheres), or Custom profile</td>
+</tr>
+<tr>
+<td>Import profile (CSV)</td>
+<td>Imports your own pressure/temperature/humidity sounding, see below</td>
+</tr>
+<tr>
+<td>Water vapour column</td>
+<td>When checked, scales the total precipitable water to the given millimetres; otherwise the value of the standard atmosphere is used</td>
+</tr>
+<tr>
+<td>Ozone column</td>
+<td>As above, in DU</td>
+</tr>
+<tr>
+<td>CO₂ mixing ratio</td>
+<td>ppm, default 420</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Custom profile file format</strong>: CSV or whitespace-separated text with a header line. Required columns: altitude, pressure, temperature and one humidity column. Recognised column names (case-insensitive):</p>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Column names</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Altitude</td>
+<td>z, alt, altitude, height</td>
+<td>km (<code>z_m</code> for metres)</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>p, pres, pressure</td>
+<td>hPa (<code>p_pa</code> for Pa)</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>t, temp, temperature</td>
+<td>K (<code>t_c</code> for °C)</td>
+</tr>
+<tr>
+<td>Humidity (one of)</td>
+<td>rh; q; h2o / h2o_vmr</td>
+<td>relative humidity %; specific humidity g/kg; volume mixing ratio ppmv</td>
+</tr>
+<tr>
+<td>Ozone (optional)</td>
+<td>o3, o3_vmr</td>
+<td>ppmv</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<pre><code>z_km,p_hpa,t_k,rh
+0.0,1013.0,295.0,70
+1.0,900.0,289.0,65
+2.0,795.0,283.0,55
+5.0,540.0,262.0,40
+10.0,265.0,223.0,20
+</code></pre>
+<p>Above the imported profile the levels are completed with the selected standard atmosphere.</p>
+<h3 id="52-geometry">5.2 Geometry</h3>
+<table>
+<thead>
+<tr>
+<th>Path type</th>
+<th>Meaning</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Slant path (observer → target)</td>
+<td>Observer and target at different altitudes</td>
+<td>Observer altitude, target altitude, view zenith angle</td>
+</tr>
+<tr>
+<td>Horizontal path</td>
+<td>Observer and target at the same altitude</td>
+<td>Observer altitude, horizontal path length</td>
+</tr>
+<tr>
+<td>Whole column, vertical</td>
+<td>Surface to top of atmosphere</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Sky radiance only</td>
+<td>No target; the radiance of the sky in a given direction</td>
+<td>Observer altitude, view zenith angle, azimuth</td>
+</tr>
+</tbody>
+</table>
+<p>Angle conventions:</p>
+<ul>
+<li><strong>View zenith angle</strong>: 0° straight up, 90° horizontal, 180° straight down. It must be below 90° when the target is above the observer and above 90° otherwise; the panel flags an error if not.</li>
+<li><strong>View azimuth</strong>, <strong>solar azimuth</strong>: 0° north, clockwise.</li>
+<li><strong>Solar zenith angle</strong>: affects only the solar-band radiometric quantities, not the transmittance.</li>
+<li><strong>Surface elevation</strong>: the altitude of the bottom of the atmospheric profile; observer and target altitudes are above sea level.</li>
+</ul>
+<p>For zenith angles between 85° and 95° the software switches to a layered extinction integration for near-horizontal paths and issues an accuracy warning.</p>
+<h3 id="53-aerosol-and-cloud">5.3 Aerosol and cloud</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aerosol type</td>
+<td>None, rural, urban, maritime, tropospheric (Shettle models), or an OPAC mixture</td>
+</tr>
+<tr>
+<td>Visibility</td>
+<td>Horizontal surface visibility in km; sets the boundary-layer aerosol loading</td>
+</tr>
+<tr>
+<td>Season</td>
+<td>Spring/summer or autumn/winter profile</td>
+</tr>
+<tr>
+<td>Stratospheric aerosol</td>
+<td>Background / moderate volcanic / high volcanic / extreme volcanic</td>
+</tr>
+<tr>
+<td>OPAC mixture name</td>
+<td>Used with OPAC, e.g. continental_average, maritime_clean, urban, desert</td>
+</tr>
+<tr>
+<td>Single cloud layer</td>
+<td>Water or ice cloud with base, top, water content and effective radius</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-surface">5.4 Surface</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Surface albedo</td>
+<td>Solar band, 0 to 1</td>
+</tr>
+<tr>
+<td>Surface temperature</td>
+<td>Emission temperature of the surface in the thermal infrared</td>
+</tr>
+<tr>
+<td>Surface emissivity</td>
+<td>Thermal infrared, 0 to 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-spectral">5.5 Spectral</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spectral unit</td>
+<td>µm / nm / cm⁻¹. The limits are converted when the unit changes</td>
+</tr>
+<tr>
+<td>From / to</td>
+<td>Spectral range. The software sends the solar band (≤ 5 µm) and the thermal band (≥ 2.5 µm) to the kernel separately and joins the results</td>
+</tr>
+<tr>
+<td>Output step</td>
+<td>Output grid spacing; 0 uses the kernel's representative-wavelength grid directly</td>
+</tr>
+<tr>
+<td>Band model resolution</td>
+<td>Coarse 15 cm⁻¹ / medium 5 cm⁻¹ / fine 1 cm⁻¹ / LOWTRAN 20 cm⁻¹. Finer is more accurate and slower</td>
+</tr>
+<tr>
+<td>Solver</td>
+<td>DISORT (multiple scattering, default) or two-stream. When radiance is needed the software switches to DISORT automatically</td>
+</tr>
+<tr>
+<td>DISORT streams</td>
+<td>Default 16; increase to 32 for strongly scattering cases (thick aerosol, cloud)</td>
+</tr>
+</tbody>
+</table>
+<p>Run-time reference (4-core office PC): 3–5 µm ground-to-air, coarse about 7 s, medium about 30 s; 8–12 µm horizontal 1 km about 2 s.</p>
+<h3 id="56-outputs">5.6 Outputs</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Meaning</th>
+<th>Unit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Path transmittance</td>
+<td>Spectral transmittance from observer to target</td>
+<td>dimensionless</td>
+</tr>
+<tr>
+<td>Path radiance</td>
+<td>Radiance emitted and scattered into the line of sight by the atmosphere along the path</td>
+<td>W/(m²·sr·cm⁻¹), switchable</td>
+</tr>
+<tr>
+<td>Sky radiance</td>
+<td>Sky radiance seen from the observer along the line of sight</td>
+<td>as above</td>
+</tr>
+<tr>
+<td>Direct / diffuse downward / upward irradiance</td>
+<td>Irradiances at the observer altitude</td>
+<td>W/(m²·cm⁻¹)</td>
+</tr>
+<tr>
+<td>Target apparent radiance</td>
+<td>For the given target temperature and emissivity, the radiance seen by the observer after atmospheric attenuation plus path radiance; the incident radiance at the target is output as well</td>
+<td>W/(m²·sr·cm⁻¹)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-typical-workflows">6. Typical workflows</h2>
+<h3 id="61-single-run-and-comparison">6.1 Single run and comparison</h3>
+<ol>
+<li>Set the parameters and click Run.</li>
+<li>Change one or two parameters (for example visibility from 23 km to 5 km) and run again. The new result is added to the same plot in a different colour, labelled with the scenario name.</li>
+<li>Check or uncheck curves in the Curves panel on the right to compare them.</li>
+<li>Switch to the Results table tab to read the numbers; the axis and spectral density units follow the toolbar.</li>
+</ol>
+<h3 id="62-saving-and-restoring">6.2 Saving and restoring</h3>
+<p>File → Save project stores the current parameters and all results in one JSON file. Opening that file later restores the curves without recomputing.</p>
+<h3 id="63-exporting">6.3 Exporting</h3>
+<ul>
+<li>Plot: File → Export image or the toolbar button, PNG / PDF / JPEG.</li>
+<li>Data: right-click a result in the Curves panel → Export this result as CSV. The CSV uses the axis and spectral density units currently selected on the toolbar; the header states the units.</li>
+</ul>
+<h3 id="64-target-detection-scenario">6.4 Target detection scenario</h3>
+<p>To obtain the apparent radiance of a target at the detector:</p>
+<ol>
+<li>Choose Slant path in Geometry and enter observer and target altitude and the zenith angle.</li>
+<li>Check Target apparent radiance under Outputs and enter the target temperature and emissivity.</li>
+<li>Running yields four curves: transmittance, path radiance, target apparent radiance and incident radiance at the target.</li>
+<li>Subtract the Sky radiance only result for the same geometry from the target apparent radiance to obtain the target-to-background radiance contrast.</li>
+</ol>
+<hr />
+<h2 id="7-parameter-sweeps-and-look-up-tables">7. Parameter sweeps and look-up tables</h2>
+<p>Calculate → Parameter sweep / LUT… starts from the current parameter panel, computes every combination (Cartesian product) of the chosen parameter values and writes a look-up table.</p>
+<h3 id="dialog-items">Dialog items</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sweep dimensions</td>
+<td>One parameter per row. Parameters are written as JSON pointers; the drop-down lists the common ones. Values can be a list <code>1, 2, 5, 10</code> or a range <code>0:10:2</code> (start:stop:step); string parameters are written by name, e.g. <code>Rural, Urban</code></td>
+</tr>
+<tr>
+<td>Column</td>
+<td>Coordinate name of that dimension in the output file, defaults to the parameter name</td>
+</tr>
+<tr>
+<td>Outputs</td>
+<td>If nothing is checked, every quantity of the scenario is written</td>
+</tr>
+<tr>
+<td>Band averages</td>
+<td>Optional; band average and band integral over µm bands, written alongside</td>
+</tr>
+<tr>
+<td>Output file</td>
+<td>The extension selects the format: <code>.h5</code> for HDF5, <code>.csv</code> for a long table</td>
+</tr>
+<tr>
+<td>Resume</td>
+<td>Skips combinations already completed when re-running after an interruption</td>
+</tr>
+</tbody>
+</table>
+<p>The dialog shows the total number of combinations and the number of kernel runs per combination. The run can be cancelled; completed parts are kept.</p>
+<h3 id="hdf5-file-layout">HDF5 file layout</h3>
+<pre><code>/&lt;Quantity&gt;                   [dim1, …, dimN, spectral]   data, unit in attribute &quot;units&quot;
+/bands/&lt;Quantity&gt;_average     [dim1, …, dimN, band]       band average
+/bands/&lt;Quantity&gt;_integral    [dim1, …, dimN, band]       band integral
+/coords/wavenumber            [spectral]                  cm⁻¹
+/coords/wavelength_um         [spectral]                  µm
+/coords/&lt;column&gt;              [values]                    coordinate of each dimension (number or string)
+/coords/band                  [band]                      band names
+/filled                       [dim1, …, dimN]             1 = combination computed
+Root attributes: kernel, kernel_version, created_utc, base_scenario (base scenario JSON), plan (sweep plan JSON)
+</code></pre>
+<p>Reading in Python (requires h5py):</p>
+<pre><code class="language-python">import h5py
+with h5py.File(&quot;lut.h5&quot;) as f:
+    T = f[&quot;Transmittance&quot;][...]            # shape [dim1, …, spectral]
+    nu = f[&quot;coords/wavenumber&quot;][...]
+    tgt = f[&quot;coords/target_km&quot;][...]
+</code></pre>
+<p><code>pyqradtran\read_lut_h5.py</code> in the installation folder is a ready-made viewer script.</p>
+<h3 id="csv-long-table">CSV long table</h3>
+<p>One row per (dimension values…, wavenumber, quantity, value); band averages go to <code>&lt;file&gt;.bands.csv</code>. Suitable for Excel pivot tables or pandas.</p>
+<hr />
+<h2 id="8-command-line-tool">8. Command-line tool</h2>
+<p><code>qradtran-cli.exe</code> is in the installation folder; with "Add to PATH" checked it works from any location.</p>
+<pre><code>qradtran-cli example --out case.json         write a template scenario file
+qradtran-cli validate case.json              check the parameters
+qradtran-cli plan case.json                  list the kernel runs that would be executed, no computation
+qradtran-cli run case.json --out out.csv     compute and write CSV (--unit um|nm|cm-1  --density cm-1|nm|um)
+qradtran-cli run case.json --out out.json    write JSON (with metadata)
+qradtran-cli batch-example --out plan.json   write a sweep plan template
+qradtran-cli batch plan.json --out lut.h5    batch computation (.h5 or .csv; --resume to continue)
+qradtran-cli kernel-info                     show kernel status and available resolutions
+</code></pre>
+<p>Exit codes: 0 success, 1 argument error, 2 validation failed, 3 kernel failure. Scenario files and GUI project files are interchangeable.</p>
+<hr />
+<h2 id="9-python-interface">9. Python interface</h2>
+<p><code>pyqradtran\</code> in the installation folder is a Python package built for Python 3.10 64-bit. Add the installation folder to <code>PYTHONPATH</code> before use:</p>
+<pre><code class="language-bat">set PYTHONPATH=C:\Program Files\QRadtran
+python
+</code></pre>
+<pre><code class="language-python">import pyqradtran as qr
+
+s = qr.Scenario.standard(&quot;MidlatitudeSummer&quot;)
+s.geometry.mode = &quot;SlantPath&quot;
+s.geometry.observer_alt_km = 0.0
+s.geometry.target_alt_km = 10.0
+s.geometry.view_zenith_deg = 30.0
+s.aerosol.type = &quot;Rural&quot;
+s.aerosol.visibility_km = 23.0
+s.spectral.set_range(3, 5, unit=&quot;Micrometer&quot;, step=0.01, resolution=&quot;Coarse&quot;)
+s.outputs.transmittance = True
+s.outputs.path_radiance = True
+
+r = qr.run(s)
+nu = r.wavenumber                   # numpy array, cm⁻¹
+T = r[&quot;Transmittance&quot;]
+L = r.series(&quot;PathRadiance&quot;, per=&quot;Micrometer&quot;)     # converted to per µm
+print(r.band_average(&quot;Transmittance&quot;, 3.0, 5.0))  # {'average':…, 'integral':…}
+r.to_csv(&quot;out.csv&quot;, unit=&quot;Micrometer&quot;)
+
+# parameter sweep
+plan = qr.BatchPlan()
+plan.base = s
+plan.add_dimension(&quot;/geometry/target_alt_km&quot;, [1, 2, 5, 10], &quot;tgt_km&quot;)
+plan.add_band(&quot;MWIR&quot;, 3.0, 5.0)
+qr.batch(plan, &quot;lut.h5&quot;)
+</code></pre>
+<p>The full example is <code>pyqradtran\python_quickstart.py</code>. The bindings share the core library and kernel with the GUI, so the results are identical.</p>
+<hr />
+<h2 id="10-settings">10. Settings</h2>
+<p>Tools → Settings:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uvspec.exe / libRadtran data directory</td>
+<td>Kernel location, by default <code>kernels\libradtran</code> under the installation folder. Normally no change is needed</td>
+</tr>
+<tr>
+<td>Detect kernel</td>
+<td>Shows the kernel version and the installed resolutions</td>
+</tr>
+<tr>
+<td>Max concurrent kernel processes</td>
+<td>0 = automatic (CPU cores minus 1). Reduce when memory is short</td>
+</tr>
+<tr>
+<td>Kernel run timeout</td>
+<td>Seconds. Fine resolution, wide bands or many streams may need a larger value</td>
+</tr>
+<tr>
+<td>Keep work directory on failure</td>
+<td>Keeps the kernel input and output files for diagnosis when a run fails; the location is written to the log</td>
+</tr>
+<tr>
+<td>Also keep work directory on success</td>
+<td>For diagnosis only, normally off</td>
+</tr>
+<tr>
+<td>Interface language</td>
+<td>Follow the system, or fix one of the eight languages; takes effect after a restart</td>
+</tr>
+</tbody>
+</table>
+<p>Work directories are created under <code>%LOCALAPPDATA%\WaveFront\QRadtran\runs\</code>.</p>
+<hr />
+<h2 id="11-computation-method-and-accuracy">11. Computation method and accuracy</h2>
+<ul>
+<li><strong>Kernel</strong>: uvspec from libRadtran 2.0.6, run as a separate process; molecular absorption with the REPTRAN representative-wavelength band model (based on HITRAN 2004 and later), multiple scattering with DISORT.</li>
+<li><strong>Slant-path transmittance</strong>: in the solar band from the ratio of the direct irradiances at the two altitudes; in the thermal band from the ratio of the radiance differences of two runs with a perturbed surface temperature.</li>
+<li><strong>Horizontal and near-horizontal paths</strong>: the extinction coefficient is derived from the vertical transmittance of the layer and integrated along the spherical path.</li>
+<li><strong>Path radiance</strong>: radiance at the observer minus the radiance at the target multiplied by the transmittance.</li>
+<li><strong>Accuracy</strong>: benchmarked against MODTRAN4 in the long-wave and mid-wave atmospheric windows; in 6 of 8 cases the band-averaged window transmittance differs by less than 0.04, the best case by 0.003. Inside strong absorption bands the two generations of spectroscopic data differ systematically. See the validation report shipped with the software.</li>
+<li><strong>REPTRAN resolutions</strong>: fine 1 cm⁻¹ is of the same class as MODTRAN's 1 cm⁻¹ band model; coarse 15 cm⁻¹ is suited to quick estimates.</li>
+</ul>
+<hr />
+<h2 id="12-frequently-asked-questions">12. Frequently asked questions</h2>
+<p><strong>The status bar says "Kernel unavailable" after start-up.</strong>
+The installation folder was moved or <code>kernels\libradtran</code> was removed by antivirus software. Check the paths in Settings; reinstall if necessary.</p>
+<p><strong>The Run button is greyed out.</strong>
+A red validation message is shown below the parameter panel; fix what it says. Common causes: slant path chosen with target altitude equal to the observer altitude; zenith angle contradicting whether the target is above or below; identical spectral limits.</p>
+<p><strong>The run fails and the log says "Netcdf error … reptran_…_medium".</strong>
+The data tables for the selected resolution are missing. The full installer contains all three; with a reduced package use Coarse or add the data.</p>
+<p><strong>Thermal-infrared transmittance is all zero.</strong>
+Happened in versions before 0.2.0 with the two-stream solver; fixed — DISORT is used automatically when radiance is required.</p>
+<p><strong>The calculation is slow.</strong>
+Fine resolution with a wide band and 32 streams is the slowest. Tune parameters with coarse resolution and produce the final plot with fine resolution; for batches use all available processes.</p>
+<p><strong>The right-axis values are hard to interpret.</strong>
+The right axis shows radiometric quantities; the unit follows the toolbar's Spectral density setting: per cm⁻¹, per nm or per µm. Tables and CSV use the same setting.</p>
+<p><strong>The interface is in English.</strong>
+When the Windows display language is not among the supported ones the software falls back to English. Choose the language under Tools → Settings → Interface language and restart.</p>
+<p><strong>Python reports "DLL load failed".</strong>
+<code>PYTHONPATH</code> must point to the installation folder itself (the level containing <code>qradtran_core.dll</code> and <code>Qt6Core.dll</code>), not to the <code>pyqradtran</code> subfolder; Python must be 3.10 64-bit.</p>
+<p><strong>Can I use my own libRadtran?</strong>
+Yes. Point uvspec.exe and the data directory in Settings to your version; it must be 2.0.x.</p>
+<hr />
+<h2 id="13-uninstalling">13. Uninstalling</h2>
+<p>Uninstall QRadtran from Settings → Apps, or run Uninstall QRadtran from the Start menu. Uninstalling keeps the user's project files and the run records under <code>%LOCALAPPDATA%\WaveFront\QRadtran</code>; delete them manually if desired.</p>
+<p>For the portable variant simply delete the folder.</p>
+<hr />
+<h2 id="14-files-and-folders">14. Files and folders</h2>
+<pre><code>QRadtran\
+├── QRadtran.exe              graphical interface
+├── qradtran-cli.exe          command line
+├── qradtran_core.dll         core library
+├── Qt6*.dll, platforms\, styles\, translations\ …   Qt runtime
+├── hdf5.dll, msvcp140.dll, vcruntime140*.dll        HDF5 and VC++ runtime
+├── kernels\libradtran\
+│   ├── bin\uvspec.exe        computation kernel (MinGW build) and its runtime
+│   ├── data\                 atmospheric profiles, aerosol, cloud, solar spectra and REPTRAN tables
+│   ├── source\               libRadtran source archive, patches and build script (GPL requirement)
+│   └── VERSION
+├── data\presets\             example scenarios
+├── pyqradtran\               Python bindings and examples
+├── licenses\                 third-party licence texts
+└── doc\                      this manual (md and html in eight languages)
+</code></pre>
+<p>Project files (<code>.json</code>) and exported CSV / HDF5 / images are stored where the user chooses.</p>
+<hr />
+<h2 id="support">Support</h2>
+<p>Wuhan WaveFront Co., Ltd.　　WeChat: angaio</p>
+</main></body></html>

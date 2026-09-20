@@ -1,0 +1,10 @@
+# Release binaries are distributed through GitHub Releases, not the repository
+*.exe
+*.zip
+*.7z
+*.msi
+
+# build / editor noise
+Thumbs.db
+desktop.ini
+.DS_Store

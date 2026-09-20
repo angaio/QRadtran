@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<title>QRadtran — Manual de instalación y uso</title>
+<style>
+ body { font-family: "Segoe UI", Arial, sans-serif; color:#111620; background:#f6f7f9; margin:0; }
+ main { max-width: 960px; margin: 0 auto; padding: 32px 40px 60px; background:#fff; }
+ h1 { border-bottom: 3px solid #0e58a8; padding-bottom: 8px; }
+ h2 { color:#0e58a8; margin-top: 2.2em; border-bottom: 1px solid #d8dce2; padding-bottom: 4px; }
+ h3 { color:#46505a; }
+ table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+ th, td { border: 1px solid #d8dce2; padding: 6px 10px; text-align: left; vertical-align: top; }
+ th { background: #eef1f5; }
+ code { background:#eef1f5; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+ pre { background:#111620; color:#f5f7fa; padding: 12px 16px; border-radius: 6px; overflow-x:auto; font-size:13px; }
+ pre code { background: none; color: inherit; padding: 0; }
+ a { color:#0e58a8; }
+ strong { color:#c6282c; }
+</style></head><body><main>
+<h1 id="qradtran-manual-de-instalacion-y-uso">QRadtran — Manual de instalación y uso</h1>
+<p><strong>Versión</strong> 0.3.0　　<strong>Fecha</strong> 2026-09-19　　<strong>Editor</strong> Wuhan WaveFront Co., Ltd.</p>
+<p>Este manual también está disponible en 简体中文, English, Русский, 日本語, 한국어, Français y Deutsch; tras la instalación, todas las versiones se encuentran en la carpeta <code>doc\</code> del directorio de instalación.</p>
+<p>QRadtran es un software de cálculo de transmitancia y radiancia atmosféricas para ingenieros de sistemas infrarrojos y electroópticos. En Windows, mediante una interfaz gráfica, calcula la transmitancia espectral en trayectos inclinados y horizontales, la radiancia del trayecto y del cielo y la radiancia aparente de un objetivo. Admite la comparación de varias curvas, barridos de parámetros que generan tablas de consulta (CSV / HDF5), una herramienta de línea de comandos y una interfaz Python. El núcleo de cálculo es el software libre libRadtran, que se instala junto con el programa; no requiere configuración adicional.</p>
+<hr />
+<h2 id="indice">Índice</h2>
+<ol>
+<li><a href="#1-requisitos-del-sistema">Requisitos del sistema</a></li>
+<li><a href="#2-instalación">Instalación</a></li>
+<li><a href="#3-primera-ejecución">Primera ejecución</a></li>
+<li><a href="#4-vista-general-de-la-interfaz">Vista general de la interfaz</a></li>
+<li><a href="#5-panel-de-parámetros-en-detalle">Panel de parámetros en detalle</a></li>
+<li><a href="#6-flujos-de-trabajo-típicos">Flujos de trabajo típicos</a></li>
+<li><a href="#7-barridos-de-parámetros-y-tablas-de-consulta">Barridos de parámetros y tablas de consulta</a></li>
+<li><a href="#8-herramienta-de-línea-de-comandos">Herramienta de línea de comandos</a></li>
+<li><a href="#9-interfaz-python">Interfaz Python</a></li>
+<li><a href="#10-configuración">Configuración</a></li>
+<li><a href="#11-método-de-cálculo-y-precisión">Método de cálculo y precisión</a></li>
+<li><a href="#12-preguntas-frecuentes">Preguntas frecuentes</a></li>
+<li><a href="#13-desinstalación">Desinstalación</a></li>
+<li><a href="#14-archivos-y-carpetas">Archivos y carpetas</a></li>
+</ol>
+<hr />
+<h2 id="1-requisitos-del-sistema">1. Requisitos del sistema</h2>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema operativo</td>
+<td>Windows 10 / 11, 64 bits</td>
+</tr>
+<tr>
+<td>Procesador</td>
+<td>4 núcleos o más. El núcleo ejecuta varios procesos en paralelo; cuantos más núcleos, más rápidos son los cálculos por lotes</td>
+</tr>
+<tr>
+<td>Memoria</td>
+<td>8 GB o más</td>
+</tr>
+<tr>
+<td>Disco</td>
+<td>Unos 1,2 GB tras la instalación (incluye las tablas espectrales de las tres resoluciones). Se recomienda SSD: los cálculos en resolución fina leen muchos datos</td>
+</tr>
+<tr>
+<td>Pantalla</td>
+<td>1600 × 900 o superior</td>
+</tr>
+<tr>
+<td>Otros</td>
+<td>No se necesita Python, MSYS2 ni WSL; el runtime de VC++ está incluido</td>
+</tr>
+</tbody>
+</table>
+<p>La interfaz Python es opcional y requiere un Python 3.10 de 64 bits del sistema con numpy.</p>
+<hr />
+<h2 id="2-instalacion">2. Instalación</h2>
+<ol>
+<li>Haga doble clic en <code>QRadtran-0.3.0-Setup-x64.exe</code>.</li>
+<li>Elija el idioma del instalador (简体中文, English, Русский, 日本語, 한국어, Français, Deutsch, Español). El instalador registra el idioma elegido como idioma de la interfaz del programa; puede cambiarse después en Herramientas → Configuración.</li>
+<li>Lea las notas sobre licencias de terceros y pulse Siguiente.</li>
+<li>Elija la carpeta de instalación, por defecto <code>C:\Program Files\QRadtran</code>. La ruta puede contener acentos, pero no se recomienda una unidad de red.</li>
+<li>Tareas adicionales:</li>
+<li><strong>Crear un acceso directo en el escritorio</strong>: marcado por defecto.</li>
+<li><strong>Añadir la carpeta de instalación al PATH</strong>: desmarcado por defecto. Si se marca, <code>qradtran-cli</code> puede escribirse en cualquier símbolo del sistema.</li>
+<li>Pulse Instalar y espere a que se copien los archivos (de 1 a 3 minutos).</li>
+<li>En la última página puede iniciar el programa o abrir este manual.</li>
+</ol>
+<p>El instalador requiere derechos de administrador. Para instalar solo para el usuario actual, elija «Instalar solo para mí» en la solicitud de privilegios; la carpeta por defecto pasa a ser <code>%LOCALAPPDATA%\Programs\QRadtran</code>.</p>
+<h3 id="uso-portatil">Uso portátil</h3>
+<p>El instalador es opcional: copie la carpeta de distribución completa <code>QRadtran\</code> a cualquier lugar y ejecute <code>QRadtran.exe</code> desde ella. Todas las dependencias están dentro de la carpeta; borrarla desinstala el programa.</p>
+<hr />
+<h2 id="3-primera-ejecucion">3. Primera ejecución</h2>
+<p>Tras iniciar, mire la barra de estado en la esquina inferior derecha de la ventana:</p>
+<pre><code>Núcleo libradtran 2.0.6 | 7 procesos
+</code></pre>
+<p>Esta línea indica que el núcleo de cálculo está listo; «procesos» es el número de procesos del núcleo que se ejecutan a la vez. Si aparece «Núcleo no disponible», abra Herramientas → Configuración y compruebe la ruta del núcleo, véase la sección 10.</p>
+<p><strong>Idioma de la interfaz</strong>: por defecto el programa sigue el idioma de visualización de Windows y admite chino simplificado, inglés, ruso, japonés, coreano, francés, alemán y español. Elija un idioma en Herramientas → Configuración → Idioma de la interfaz y reinicie; también puede forzarse desde la línea de comandos, por ejemplo <code>QRadtran.exe --lang es</code>.</p>
+<p>Para la primera prueba, parta de un escenario predefinido:</p>
+<ol>
+<li>Menú Archivo → Cargar escenario predefinido…, elija <code>mls_ground_to_air_3_5um.json</code> (atmósfera de latitud media en verano, observación desde tierra de un objetivo a 10 km de altitud, 3–5 µm).</li>
+<li>Pulse Ejecutar en la barra de herramientas o presione F5.</li>
+<li>Aparece una tarea en el panel Tareas y registro de la parte inferior; cuando la barra de progreso termina, las curvas se muestran en el centro: azul para la transmitancia (eje izquierdo), colores cálidos para las magnitudes radiométricas (eje derecho). Todo el proceso dura unos 7 segundos.</li>
+</ol>
+<hr />
+<h2 id="4-vista-general-de-la-interfaz">4. Vista general de la interfaz</h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ Archivo  Calcular  Ver  Herramientas  Ayuda                         │
+│ [Nuevo][Abrir][Guardar] │ [▶Ejecutar][■Detener][Barrido] │ [Exportar][Zoom] │ Eje X  Densidad │
+├──────────────┬───────────────────────────────────────┬──────────────┤
+│  Parámetros  │  Espectros / Tabla de resultados      │  Curvas      │
+│  ▸ Atmósfera │                                       │  ☑ Transmit. │
+│  ▸ Geometría │        (gráfico de dos ejes)          │  ☑ Radiancia │
+│  ▸ Aerosol   │                                       │  color       │
+│  ▸ Suelo     │                                       │              │
+│  ▸ Espectral │                                       │              │
+│  ▸ Salidas   │                                       │              │
+│  [Calcular]  │  x = 4,35 µm  Transmitancia 0,812 …   │              │
+├──────────────┴───────────────────────────────────────┴──────────────┤
+│  Tareas y registro: lista (estado / progreso / tiempo) │ registro   │
+├─────────────────────────────────────────────────────────────────────┤
+│ Barra de estado: lectura del cursor            Núcleo libradtran 2.0.6 │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p>Los tres paneles acoplables pueden arrastrarse, cerrarse y reorganizarse; un panel cerrado se restaura desde el menú Ver o arrastrando el borde.</p>
+<h3 id="barra-de-herramientas">Barra de herramientas</h3>
+<table>
+<thead>
+<tr>
+<th>Botón</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nuevo / Abrir / Guardar proyecto</td>
+<td>Un proyecto es un archivo JSON con todos los parámetros y los resultados calculados</td>
+</tr>
+<tr>
+<td>Cargar escenario predefinido</td>
+<td>Tres escenarios de ejemplo incluidos; sus nombres siguen el idioma de la interfaz</td>
+</tr>
+<tr>
+<td>Ejecutar (F5)</td>
+<td>Calcula con los parámetros actuales; el resultado se añade al gráfico sin sustituir los anteriores</td>
+</tr>
+<tr>
+<td>Detener todo</td>
+<td>Cancela todas las tareas en ejecución</td>
+</tr>
+<tr>
+<td>Barrido de parámetros / LUT</td>
+<td>Abre el cuadro de diálogo de cálculo por lotes, véase la sección 7</td>
+</tr>
+<tr>
+<td>Exportar imagen</td>
+<td>Guarda el gráfico actual como PNG / PDF / JPEG</td>
+</tr>
+<tr>
+<td>Restablecer zoom (Inicio)</td>
+<td>Devuelve el gráfico al rango completo</td>
+</tr>
+<tr>
+<td>Eje X</td>
+<td>Unidad del eje horizontal: µm / nm / cm⁻¹; efecto inmediato</td>
+</tr>
+<tr>
+<td>Densidad espectral</td>
+<td>Unidad de densidad espectral de las magnitudes radiométricas: por µm / por nm / por cm⁻¹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interaccion-con-el-grafico">Interacción con el gráfico</h3>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Efecto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rueda del ratón</td>
+<td>Zoom centrado en el cursor</td>
+</tr>
+<tr>
+<td>Arrastrar</td>
+<td>Desplazar</td>
+</tr>
+<tr>
+<td>Doble clic</td>
+<td>Restablecer</td>
+</tr>
+<tr>
+<td>Mover el ratón</td>
+<td>La línea inferior y la barra de estado muestran el valor de cada curva bajo el cursor</td>
+</tr>
+<tr>
+<td>Casilla del panel Curvas</td>
+<td>Mostrar / ocultar una curva</td>
+</tr>
+<tr>
+<td>Doble clic en la muestra de color</td>
+<td>Cambiar el color de la curva</td>
+</tr>
+<tr>
+<td>Clic derecho en un nombre de resultado</td>
+<td>Exportar ese resultado como CSV o eliminarlo</td>
+</tr>
+</tbody>
+</table>
+<p>La transmitancia se dibuja en el eje izquierdo (0 a 1); la radiancia y la irradiancia en el eje derecho, de modo que pueden superponerse.</p>
+<hr />
+<h2 id="5-panel-de-parametros-en-detalle">5. Panel de parámetros en detalle</h2>
+<h3 id="51-atmosfera">5.1 Atmósfera</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Atmósfera estándar</td>
+<td>Tropical, latitud media verano, latitud media invierno, subártico verano, subártico invierno, estándar EE. UU. 1976 (las seis atmósferas AFGL) o perfil personalizado</td>
+</tr>
+<tr>
+<td>Importar perfil (CSV)</td>
+<td>Importa un sondeo propio de presión/temperatura/humedad, véase abajo</td>
+</tr>
+<tr>
+<td>Columna de vapor de agua</td>
+<td>Si se marca, el agua precipitable total se ajusta a los milímetros indicados; si no, se usa el valor de la atmósfera estándar</td>
+</tr>
+<tr>
+<td>Columna de ozono</td>
+<td>Igual, en DU</td>
+</tr>
+<tr>
+<td>Relación de mezcla de CO₂</td>
+<td>ppm, 420 por defecto</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Formato del archivo de perfil personalizado</strong>: CSV o texto separado por espacios con una línea de cabecera. Columnas obligatorias: altitud, presión, temperatura y una columna de humedad. Nombres de columna reconocidos (sin distinguir mayúsculas):</p>
+<table>
+<thead>
+<tr>
+<th>Magnitud</th>
+<th>Nombres de columna</th>
+<th>Unidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Altitud</td>
+<td>z, alt, altitude, height</td>
+<td>km (<code>z_m</code> para metros)</td>
+</tr>
+<tr>
+<td>Presión</td>
+<td>p, pres, pressure</td>
+<td>hPa (<code>p_pa</code> para Pa)</td>
+</tr>
+<tr>
+<td>Temperatura</td>
+<td>t, temp, temperature</td>
+<td>K (<code>t_c</code> para °C)</td>
+</tr>
+<tr>
+<td>Humedad (una de ellas)</td>
+<td>rh; q; h2o / h2o_vmr</td>
+<td>humedad relativa %; humedad específica g/kg; relación de mezcla en volumen ppmv</td>
+</tr>
+<tr>
+<td>Ozono (opcional)</td>
+<td>o3, o3_vmr</td>
+<td>ppmv</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo:</p>
+<pre><code>z_km,p_hpa,t_k,rh
+0.0,1013.0,295.0,70
+1.0,900.0,289.0,65
+2.0,795.0,283.0,55
+5.0,540.0,262.0,40
+10.0,265.0,223.0,20
+</code></pre>
+<p>Por encima del perfil importado, los niveles se completan con la atmósfera estándar seleccionada.</p>
+<h3 id="52-geometria">5.2 Geometría</h3>
+<table>
+<thead>
+<tr>
+<th>Tipo de trayecto</th>
+<th>Significado</th>
+<th>Parámetros</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Trayecto inclinado (observador → objetivo)</td>
+<td>Observador y objetivo a distintas altitudes</td>
+<td>Altitud del observador, altitud del objetivo, ángulo cenital de observación</td>
+</tr>
+<tr>
+<td>Trayecto horizontal</td>
+<td>Observador y objetivo a la misma altitud</td>
+<td>Altitud del observador, longitud del trayecto horizontal</td>
+</tr>
+<tr>
+<td>Columna completa, vertical</td>
+<td>Del suelo al tope de la atmósfera</td>
+<td>Ninguno</td>
+</tr>
+<tr>
+<td>Solo radiancia del cielo</td>
+<td>Sin objetivo; radiancia del cielo en una dirección dada</td>
+<td>Altitud del observador, ángulo cenital, acimut</td>
+</tr>
+</tbody>
+</table>
+<p>Convenciones angulares:</p>
+<ul>
+<li><strong>Ángulo cenital de observación</strong>: 0° hacia arriba, 90° horizontal, 180° hacia abajo. Debe ser menor que 90° si el objetivo está por encima del observador y mayor que 90° en caso contrario; si no, el panel señala un error.</li>
+<li><strong>Acimut de observación</strong>, <strong>acimut solar</strong>: 0° al norte, sentido horario.</li>
+<li><strong>Ángulo cenital solar</strong>: solo afecta a las magnitudes radiométricas de la banda solar, no a la transmitancia.</li>
+<li><strong>Elevación del terreno</strong>: altitud de la base del perfil atmosférico; las altitudes del observador y del objetivo son sobre el nivel del mar.</li>
+</ul>
+<p>Para ángulos cenitales entre 85° y 95°, el programa pasa a una integración de la extinción por capas para trayectos casi horizontales y emite un aviso de precisión.</p>
+<h3 id="53-aerosol-y-nube">5.3 Aerosol y nube</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo de aerosol</td>
+<td>Ninguno, rural, urbano, marítimo, troposférico (modelos de Shettle) o mezcla OPAC</td>
+</tr>
+<tr>
+<td>Visibilidad</td>
+<td>Visibilidad horizontal en superficie en km; fija la carga de aerosol de la capa límite</td>
+</tr>
+<tr>
+<td>Estación</td>
+<td>Perfil primavera/verano u otoño/invierno</td>
+</tr>
+<tr>
+<td>Aerosol estratosférico</td>
+<td>Fondo / volcánico moderado / volcánico alto / volcánico extremo</td>
+</tr>
+<tr>
+<td>Nombre de la mezcla OPAC</td>
+<td>Se usa con OPAC, p. ej. continental_average, maritime_clean, urban, desert</td>
+</tr>
+<tr>
+<td>Capa de nube única</td>
+<td>Nube de agua o de hielo con base, techo, contenido de agua y radio efectivo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-suelo">5.4 Suelo</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Albedo del suelo</td>
+<td>Banda solar, 0 a 1</td>
+</tr>
+<tr>
+<td>Temperatura del suelo</td>
+<td>Temperatura de emisión del suelo en el infrarrojo térmico</td>
+</tr>
+<tr>
+<td>Emisividad del suelo</td>
+<td>Infrarrojo térmico, 0 a 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="55-espectral">5.5 Espectral</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unidad espectral</td>
+<td>µm / nm / cm⁻¹. Los límites se convierten al cambiar de unidad</td>
+</tr>
+<tr>
+<td>Desde / hasta</td>
+<td>Rango espectral. El programa envía por separado al núcleo la banda solar (≤ 5 µm) y la térmica (≥ 2,5 µm) y une los resultados</td>
+</tr>
+<tr>
+<td>Paso de salida</td>
+<td>Espaciado de la malla de salida; 0 usa directamente la malla de longitudes de onda representativas del núcleo</td>
+</tr>
+<tr>
+<td>Resolución del modelo de banda</td>
+<td>Grueso 15 cm⁻¹ / medio 5 cm⁻¹ / fino 1 cm⁻¹ / LOWTRAN 20 cm⁻¹. Más fino es más preciso y más lento</td>
+</tr>
+<tr>
+<td>Solucionador</td>
+<td>DISORT (dispersión múltiple, por defecto) o dos flujos. Cuando se necesita radiancia, el programa cambia a DISORT automáticamente</td>
+</tr>
+<tr>
+<td>Flujos DISORT</td>
+<td>16 por defecto; aumente a 32 en casos con fuerte dispersión (aerosol denso, nube)</td>
+</tr>
+</tbody>
+</table>
+<p>Tiempos orientativos (PC de oficina de 4 núcleos): 3–5 µm tierra-aire, grueso ≈ 7 s, medio ≈ 30 s; 8–12 µm horizontal 1 km ≈ 2 s.</p>
+<h3 id="56-salidas">5.6 Salidas</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Significado</th>
+<th>Unidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transmitancia del trayecto</td>
+<td>Transmitancia espectral del observador al objetivo</td>
+<td>adimensional</td>
+</tr>
+<tr>
+<td>Radiancia del trayecto</td>
+<td>Radiancia emitida y dispersada hacia la línea de visión por la atmósfera a lo largo del trayecto</td>
+<td>W/(m²·sr·cm⁻¹), conmutable</td>
+</tr>
+<tr>
+<td>Radiancia del cielo</td>
+<td>Radiancia del cielo vista desde el observador a lo largo de la línea de visión</td>
+<td>ídem</td>
+</tr>
+<tr>
+<td>Irradiancia directa / difusa descendente / ascendente</td>
+<td>Irradiancias a la altitud del observador</td>
+<td>W/(m²·cm⁻¹)</td>
+</tr>
+<tr>
+<td>Radiancia aparente del objetivo</td>
+<td>Para la temperatura y emisividad del objetivo dadas, radiancia vista por el observador tras la atenuación atmosférica más la radiancia del trayecto; también se produce la radiancia incidente en el objetivo</td>
+<td>W/(m²·sr·cm⁻¹)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-flujos-de-trabajo-tipicos">6. Flujos de trabajo típicos</h2>
+<h3 id="61-calculo-unico-y-comparacion">6.1 Cálculo único y comparación</h3>
+<ol>
+<li>Ajuste los parámetros y pulse Ejecutar.</li>
+<li>Cambie uno o dos parámetros (por ejemplo la visibilidad de 23 km a 5 km) y vuelva a ejecutar. El nuevo resultado se añade al mismo gráfico con otro color y el nombre del escenario en la leyenda.</li>
+<li>Marque o desmarque en el panel Curvas de la derecha las curvas que quiera comparar.</li>
+<li>Pase a la pestaña Tabla de resultados para ver los valores; las unidades de eje y de densidad espectral siguen la barra de herramientas.</li>
+</ol>
+<h3 id="62-guardar-y-restaurar">6.2 Guardar y restaurar</h3>
+<p>Archivo → Guardar proyecto almacena los parámetros actuales y todos los resultados en un archivo JSON. Al abrirlo después, las curvas se restauran sin recalcular.</p>
+<h3 id="63-exportacion">6.3 Exportación</h3>
+<ul>
+<li>Gráfico: Archivo → Exportar imagen o el botón de la barra de herramientas, PNG / PDF / JPEG.</li>
+<li>Datos: clic derecho en un resultado del panel Curvas → Exportar este resultado como CSV. El CSV usa las unidades de eje y de densidad espectral seleccionadas en la barra de herramientas; la cabecera indica las unidades.</li>
+</ul>
+<h3 id="64-escenario-de-deteccion-de-objetivos">6.4 Escenario de detección de objetivos</h3>
+<p>Para obtener la radiancia aparente de un objetivo en el detector:</p>
+<ol>
+<li>Elija Trayecto inclinado en Geometría e introduzca las altitudes del observador y del objetivo y el ángulo cenital.</li>
+<li>Marque Radiancia aparente del objetivo en Salidas e introduzca la temperatura y la emisividad del objetivo.</li>
+<li>La ejecución produce cuatro curvas: transmitancia, radiancia del trayecto, radiancia aparente del objetivo y radiancia incidente en el objetivo.</li>
+<li>Reste el resultado Solo radiancia del cielo de la misma geometría a la radiancia aparente del objetivo para obtener el contraste de radiancia objetivo/fondo.</li>
+</ol>
+<hr />
+<h2 id="7-barridos-de-parametros-y-tablas-de-consulta">7. Barridos de parámetros y tablas de consulta</h2>
+<p>Calcular → Barrido de parámetros / LUT… parte del panel de parámetros actual, calcula cada combinación (producto cartesiano) de los valores elegidos y escribe una tabla de consulta.</p>
+<h3 id="elementos-del-cuadro-de-dialogo">Elementos del cuadro de diálogo</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dimensiones del barrido</td>
+<td>Un parámetro por fila. Los parámetros se escriben como punteros JSON; la lista desplegable ofrece los habituales. Los valores son una lista <code>1, 2, 5, 10</code> o un rango <code>0:10:2</code> (inicio:fin:paso); los parámetros de texto se escriben por su nombre, p. ej. <code>Rural, Urban</code></td>
+</tr>
+<tr>
+<td>Columna</td>
+<td>Nombre de la coordenada de esa dimensión en el archivo de salida; por defecto el nombre del parámetro</td>
+</tr>
+<tr>
+<td>Salidas</td>
+<td>Si no se marca nada, se escriben todas las magnitudes del escenario</td>
+</tr>
+<tr>
+<td>Promedios por banda</td>
+<td>Opcional; promedio e integral por bandas en µm, escritos además</td>
+</tr>
+<tr>
+<td>Archivo de salida</td>
+<td>La extensión determina el formato: <code>.h5</code> para HDF5, <code>.csv</code> para una tabla larga</td>
+</tr>
+<tr>
+<td>Reanudar</td>
+<td>Omite las combinaciones ya calculadas al volver a ejecutar tras una interrupción</td>
+</tr>
+</tbody>
+</table>
+<p>El cuadro de diálogo muestra el número total de combinaciones y el número de ejecuciones del núcleo por combinación. El cálculo puede cancelarse; la parte terminada se conserva.</p>
+<h3 id="estructura-del-archivo-hdf5">Estructura del archivo HDF5</h3>
+<pre><code>/&lt;Magnitud&gt;                   [dim1, …, dimN, espectral]  datos, unidad en el atributo &quot;units&quot;
+/bands/&lt;Magnitud&gt;_average     [dim1, …, dimN, banda]      promedio por banda
+/bands/&lt;Magnitud&gt;_integral    [dim1, …, dimN, banda]      integral por banda
+/coords/wavenumber            [espectral]                 cm⁻¹
+/coords/wavelength_um         [espectral]                 µm
+/coords/&lt;columna&gt;             [valores]                   coordenada de cada dimensión (número o cadena)
+/coords/band                  [banda]                     nombres de banda
+/filled                       [dim1, …, dimN]             1 = combinación calculada
+Atributos raíz: kernel, kernel_version, created_utc, base_scenario (JSON del escenario base), plan (JSON del plan de barrido)
+</code></pre>
+<p>Lectura en Python (requiere h5py):</p>
+<pre><code class="language-python">import h5py
+with h5py.File(&quot;lut.h5&quot;) as f:
+    T = f[&quot;Transmittance&quot;][...]            # forma [dim1, …, espectral]
+    nu = f[&quot;coords/wavenumber&quot;][...]
+    tgt = f[&quot;coords/target_km&quot;][...]
+</code></pre>
+<p><code>pyqradtran\read_lut_h5.py</code> en la carpeta de instalación es un script de visualización listo para usar.</p>
+<h3 id="tabla-larga-csv">Tabla larga CSV</h3>
+<p>Una fila por (valores de dimensión…, número de onda, magnitud, valor); los promedios por banda van a <code>&lt;archivo&gt;.bands.csv</code>. Adecuada para tablas dinámicas de Excel o pandas.</p>
+<hr />
+<h2 id="8-herramienta-de-linea-de-comandos">8. Herramienta de línea de comandos</h2>
+<p><code>qradtran-cli.exe</code> está en la carpeta de instalación; con «Añadir al PATH» marcado funciona desde cualquier lugar.</p>
+<pre><code>qradtran-cli example --out case.json         escribir un archivo de escenario de plantilla
+qradtran-cli validate case.json              comprobar los parámetros
+qradtran-cli plan case.json                  listar las ejecuciones del núcleo previstas, sin calcular
+qradtran-cli run case.json --out out.csv     calcular y escribir CSV (--unit um|nm|cm-1  --density cm-1|nm|um)
+qradtran-cli run case.json --out out.json    escribir JSON (con metadatos)
+qradtran-cli batch-example --out plan.json   escribir una plantilla de plan de barrido
+qradtran-cli batch plan.json --out lut.h5    cálculo por lotes (.h5 o .csv; --resume para reanudar)
+qradtran-cli kernel-info                     mostrar el estado del núcleo y las resoluciones disponibles
+</code></pre>
+<p>Códigos de salida: 0 éxito, 1 error de argumentos, 2 validación fallida, 3 fallo del núcleo. Los archivos de escenario y los archivos de proyecto de la interfaz son intercambiables.</p>
+<hr />
+<h2 id="9-interfaz-python">9. Interfaz Python</h2>
+<p><code>pyqradtran\</code> en la carpeta de instalación es un paquete Python compilado para Python 3.10 de 64 bits. Añada la carpeta de instalación al <code>PYTHONPATH</code> antes de usarlo:</p>
+<pre><code class="language-bat">set PYTHONPATH=C:\Program Files\QRadtran
+python
+</code></pre>
+<pre><code class="language-python">import pyqradtran as qr
+
+s = qr.Scenario.standard(&quot;MidlatitudeSummer&quot;)
+s.geometry.mode = &quot;SlantPath&quot;
+s.geometry.observer_alt_km = 0.0
+s.geometry.target_alt_km = 10.0
+s.geometry.view_zenith_deg = 30.0
+s.aerosol.type = &quot;Rural&quot;
+s.aerosol.visibility_km = 23.0
+s.spectral.set_range(3, 5, unit=&quot;Micrometer&quot;, step=0.01, resolution=&quot;Coarse&quot;)
+s.outputs.transmittance = True
+s.outputs.path_radiance = True
+
+r = qr.run(s)
+nu = r.wavenumber                   # matriz numpy, cm⁻¹
+T = r[&quot;Transmittance&quot;]
+L = r.series(&quot;PathRadiance&quot;, per=&quot;Micrometer&quot;)     # convertido a por µm
+print(r.band_average(&quot;Transmittance&quot;, 3.0, 5.0))  # {'average':…, 'integral':…}
+r.to_csv(&quot;out.csv&quot;, unit=&quot;Micrometer&quot;)
+
+# barrido de parámetros
+plan = qr.BatchPlan()
+plan.base = s
+plan.add_dimension(&quot;/geometry/target_alt_km&quot;, [1, 2, 5, 10], &quot;tgt_km&quot;)
+plan.add_band(&quot;MWIR&quot;, 3.0, 5.0)
+qr.batch(plan, &quot;lut.h5&quot;)
+</code></pre>
+<p>El ejemplo completo es <code>pyqradtran\python_quickstart.py</code>. Los enlaces comparten la biblioteca central y el núcleo con la interfaz gráfica, así que los resultados son idénticos.</p>
+<hr />
+<h2 id="10-configuracion">10. Configuración</h2>
+<p>Herramientas → Configuración:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>uvspec.exe / directorio de datos de libRadtran</td>
+<td>Ubicación del núcleo, por defecto <code>kernels\libradtran</code> bajo la carpeta de instalación. Normalmente no hay que cambiarlo</td>
+</tr>
+<tr>
+<td>Detectar núcleo</td>
+<td>Muestra la versión del núcleo y las resoluciones instaladas</td>
+</tr>
+<tr>
+<td>Máx. procesos de núcleo simultáneos</td>
+<td>0 = automático (núcleos de CPU menos 1). Reduzca si falta memoria</td>
+</tr>
+<tr>
+<td>Tiempo límite por ejecución del núcleo</td>
+<td>Segundos. Resolución fina, bandas anchas o muchos flujos pueden necesitar un valor mayor</td>
+</tr>
+<tr>
+<td>Conservar el directorio de trabajo si falla</td>
+<td>Conserva los archivos de entrada y salida del núcleo para diagnóstico cuando falla; la ubicación se escribe en el registro</td>
+</tr>
+<tr>
+<td>Conservar también el directorio de trabajo si tiene éxito</td>
+<td>Solo para diagnóstico, normalmente desactivado</td>
+</tr>
+<tr>
+<td>Idioma de la interfaz</td>
+<td>Seguir el sistema o fijar uno de los ocho idiomas; se aplica tras reiniciar</td>
+</tr>
+</tbody>
+</table>
+<p>Los directorios de trabajo se crean en <code>%LOCALAPPDATA%\WaveFront\QRadtran\runs\</code>.</p>
+<hr />
+<h2 id="11-metodo-de-calculo-y-precision">11. Método de cálculo y precisión</h2>
+<ul>
+<li><strong>Núcleo</strong>: uvspec de libRadtran 2.0.6, ejecutado como proceso independiente; absorción molecular con el modelo de banda de longitudes de onda representativas REPTRAN (basado en HITRAN 2004 y posteriores), dispersión múltiple con DISORT.</li>
+<li><strong>Transmitancia en trayecto inclinado</strong>: en la banda solar, por el cociente de las irradiancias directas en las dos altitudes; en la banda térmica, por el cociente de las diferencias de radiancia de dos ejecuciones con la temperatura del suelo perturbada.</li>
+<li><strong>Trayectos horizontales y casi horizontales</strong>: el coeficiente de extinción se deriva de la transmitancia vertical de la capa y se integra a lo largo del trayecto esférico.</li>
+<li><strong>Radiancia del trayecto</strong>: radiancia en el observador menos la radiancia en el objetivo multiplicada por la transmitancia.</li>
+<li><strong>Precisión</strong>: contrastada con MODTRAN4 en las ventanas atmosféricas de onda larga y onda media; en 6 de 8 casos la transmitancia media de la ventana difiere en menos de 0,04, el mejor caso en 0,003. Dentro de las bandas de absorción fuerte, las dos generaciones de datos espectroscópicos difieren sistemáticamente. Véase el informe de validación incluido con el programa.</li>
+<li><strong>Resoluciones REPTRAN</strong>: la fina de 1 cm⁻¹ es de la misma clase que el modelo de banda de 1 cm⁻¹ de MODTRAN; la gruesa de 15 cm⁻¹ sirve para estimaciones rápidas.</li>
+</ul>
+<hr />
+<h2 id="12-preguntas-frecuentes">12. Preguntas frecuentes</h2>
+<p><strong>La barra de estado muestra «Núcleo no disponible» al iniciar.</strong>
+Se movió la carpeta de instalación o un antivirus eliminó <code>kernels\libradtran</code>. Compruebe las rutas en Configuración; reinstale si es necesario.</p>
+<p><strong>El botón Ejecutar está en gris.</strong>
+Bajo el panel de parámetros aparece un mensaje de validación en rojo; corrija lo que indica. Causas frecuentes: trayecto inclinado con el objetivo a la misma altitud que el observador; ángulo cenital contradictorio con la posición del objetivo arriba/abajo; límites espectrales iguales.</p>
+<p><strong>El cálculo falla y el registro dice «Netcdf error … reptran_…_medium».</strong>
+Faltan las tablas de datos de la resolución elegida. El instalador completo contiene las tres; con un paquete reducido use Grueso o añada los datos.</p>
+<p><strong>La transmitancia en el infrarrojo térmico es toda cero.</strong>
+Ocurría en versiones anteriores a 0.2.0 con el solucionador de dos flujos; corregido: se usa DISORT automáticamente cuando se requiere radiancia.</p>
+<p><strong>El cálculo es lento.</strong>
+Resolución fina con banda ancha y 32 flujos es lo más lento. Ajuste los parámetros con resolución gruesa y genere el gráfico final con resolución fina; en los lotes use todos los procesos disponibles.</p>
+<p><strong>Los valores del eje derecho son difíciles de interpretar.</strong>
+El eje derecho muestra magnitudes radiométricas; la unidad sigue el ajuste Densidad espectral de la barra de herramientas: por cm⁻¹, por nm o por µm. Las tablas y el CSV usan el mismo ajuste.</p>
+<p><strong>La interfaz aparece en inglés.</strong>
+Cuando el idioma de visualización de Windows no está entre los admitidos, el programa vuelve al inglés. Elija el idioma en Herramientas → Configuración → Idioma de la interfaz y reinicie.</p>
+<p><strong>Python informa «DLL load failed».</strong>
+<code>PYTHONPATH</code> debe apuntar a la propia carpeta de instalación (el nivel que contiene <code>qradtran_core.dll</code> y <code>Qt6Core.dll</code>), no a la subcarpeta <code>pyqradtran</code>; Python debe ser 3.10 de 64 bits.</p>
+<p><strong>¿Puedo usar mi propio libRadtran?</strong>
+Sí. En Configuración, apunte uvspec.exe y el directorio de datos a su versión; debe ser 2.0.x.</p>
+<hr />
+<h2 id="13-desinstalacion">13. Desinstalación</h2>
+<p>Desinstale QRadtran desde Configuración → Aplicaciones o ejecute Desinstalar QRadtran desde el menú Inicio. La desinstalación conserva los archivos de proyecto del usuario y los registros de ejecución en <code>%LOCALAPPDATA%\WaveFront\QRadtran</code>; bórrelos manualmente si lo desea.</p>
+<p>En la variante portátil basta con borrar la carpeta.</p>
+<hr />
+<h2 id="14-archivos-y-carpetas">14. Archivos y carpetas</h2>
+<pre><code>QRadtran\
+├── QRadtran.exe              interfaz gráfica
+├── qradtran-cli.exe          línea de comandos
+├── qradtran_core.dll         biblioteca central
+├── Qt6*.dll, platforms\, styles\, translations\ …   runtime de Qt
+├── hdf5.dll, msvcp140.dll, vcruntime140*.dll        HDF5 y runtime de VC++
+├── kernels\libradtran\
+│   ├── bin\uvspec.exe        núcleo de cálculo (compilación MinGW) y su runtime
+│   ├── data\                 perfiles atmosféricos, aerosoles, nubes, espectros solares y tablas REPTRAN
+│   ├── source\               archivo de fuentes de libRadtran, parches y script de compilación (requisito GPL)
+│   └── VERSION
+├── data\presets\             escenarios de ejemplo
+├── pyqradtran\               enlaces Python y ejemplos
+├── licenses\                 textos de licencias de terceros
+└── doc\                      este manual (md y html en ocho idiomas)
+</code></pre>
+<p>Los archivos de proyecto (<code>.json</code>) y los CSV / HDF5 / imágenes exportados se guardan donde el usuario elija.</p>
+<hr />
+<h2 id="soporte">Soporte</h2>
+<p>Wuhan WaveFront Co., Ltd.　　WeChat: angaio</p>
+</main></body></html>
